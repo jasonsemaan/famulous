@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "183664389202",
+    "project_id": "famulus-dev-v1",
+    "storage_bucket": "famulus-dev-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183664389202:android:53ca540fc40b8268c9838b",
+        "android_client_info": {
+          "package_name": "com.famulus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "183664389202-kn7d2bkk8st86hptc1en0nrvpashqfa1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.famulus",
+            "certificate_hash": "23e4c203d4d3fde910437a1ed68e2e95e68a5765"
+          }
+        },
+        {
+          "client_id": "183664389202-g0q9eral72no156d10ecm126g6so907t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-FgYSjuhwo-j3liyD6LpuMMumGXWb5co"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "183664389202-g0q9eral72no156d10ecm126g6so907t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

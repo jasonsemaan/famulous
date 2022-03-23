@@ -8,6 +8,7 @@ import auth, { firebase } from '@react-native-firebase/auth';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import NetInfo from "@react-native-community/netinfo";
 import { strings } from "../../../App";
+import { PortraitDescComponent } from "../02-components/JournalPreviewComponent";
 
 const JournalPreview = ({ route, navigation }) => {
     var admin = route.params.adminName;
@@ -161,39 +162,7 @@ const JournalPreview = ({ route, navigation }) => {
                 {frameId.substring(0, 1) === "S" ? (
                     <View>
                         {item.famImgStoreEntity1.IMG_ORIENTATION === "PORTRAIT" ? (
-                            <View style={globalStyles.journal_upload_item_view_portrait_50pourcent_withoutborder}>
-                                <View style={globalStyles.portrait_width50}>
-                                    <View style={globalStyles.portrait_width100_preview}>
-                                        <FastImage
-                                            style={{ width: '100%', height: '100%' }}
-                                            source={{
-                                                uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.IMG_PATH,
-                                            }}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />
-                                    </View>
-                                </View>
-                                <View style={globalStyles.portrait_2ndView50}>
-                                    <View style={globalStyles.portrait_closeView}>
-                                    </View>
-                                    <View>
-                                        <FastImage
-                                            style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
-                                            source={{
-                                                uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
-                                            }}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />
-                                    </View>
-                                    <View style={{ marginTop: 15 }}>
-                                        <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity1.USER_NAME}</Text>
-                                        <Text style={globalStyles.journal_text_styles_date_preview}>{formattedDate1}</Text>
-                                    </View>
-                                    <View style={globalStyles.portrait_description}>
-                                        <Text style={globalStyles.journal_text_styles_description_grey}>{item.famImgStoreEntity1.IMG_DESCRIPTION}</Text>
-                                    </View>
-                                </View>
-                            </View>
+                            <PortraitDescComponent contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate1={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION}/>
                         ) : item.famImgStoreEntity1.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity1.IMG_DESCRIPTION_VISIBLE === 1 ? (
                             <View style={globalStyles.journal_upload_item_view_landscape_50pourcent_withoutborder}>
                                 <View style={globalStyles.landscape_width50}>
@@ -211,7 +180,7 @@ const JournalPreview = ({ route, navigation }) => {
                                         </View>
                                         <View style={{ marginTop: 40 }}>
                                             <FastImage
-                                                style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                                                style={globalStyles.imageRounded40}
                                                 source={{
                                                     uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
                                                 }}
@@ -245,7 +214,7 @@ const JournalPreview = ({ route, navigation }) => {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', bottom: 45 }}>
                                     <View>
                                         <FastImage
-                                            style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                                            style={globalStyles.imageRounded40}
                                             source={{
                                                 uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
                                             }}
@@ -285,7 +254,7 @@ const JournalPreview = ({ route, navigation }) => {
                                             </View>
                                             <View>
                                                 <FastImage
-                                                    style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                                                    style={globalStyles.imageRounded40}
                                                     source={{
                                                         uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.PROFILE_PHOTO_PATH,
                                                     }}
@@ -318,7 +287,7 @@ const JournalPreview = ({ route, navigation }) => {
                                                 </View>
                                                 <View style={{ marginTop: 40 }}>
                                                     <FastImage
-                                                        style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                                                        style={globalStyles.imageRounded40}
                                                         source={{
                                                             uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.PROFILE_PHOTO_PATH,
                                                         }}
@@ -352,7 +321,7 @@ const JournalPreview = ({ route, navigation }) => {
                                         <View style={{ flexDirection: 'row', alignItems: 'center', bottom: 45 }}>
                                             <View>
                                                 <FastImage
-                                                    style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                                                    style={globalStyles.imageRounded40}
                                                     source={{
                                                         uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.PROFILE_PHOTO_PATH,
                                                     }}
@@ -390,7 +359,7 @@ const JournalPreview = ({ route, navigation }) => {
                             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: 75 }}>
                                 <View >
                                     <FastImage
-                                        style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                                        style={globalStyles.imageRounded40}
                                         source={{
                                             uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
                                         }}
@@ -425,7 +394,7 @@ const JournalPreview = ({ route, navigation }) => {
                             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: 85 }}>
                                 <View>
                                     <FastImage
-                                        style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                                        style={globalStyles.imageRounded40}
                                         source={{
                                             uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
                                         }}
@@ -445,8 +414,8 @@ const JournalPreview = ({ route, navigation }) => {
                 }
 
                 <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15 }}>
-                    <Text style={{ color: '#9b56a2', fontWeight: '600', fontSize: 12 }}>{global.JournalName}</Text>
-                    <Text style={{ color: '#9b56a2', fontWeight: '600', fontSize: 12 }}>{index + 1}</Text>
+                    <Text style={globalStyles.purpleBoldLable}>{global.JournalName}</Text>
+                    <Text style={globalStyles.purpleBoldLable}>{index + 1}</Text>
                     <View>
                         <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo}/>
                     </View>
@@ -654,7 +623,7 @@ const JournalFooterPage = () => {
             <View style={{ marginTop: 10, width: '50%' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
                     <FastImage
-                        style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+                        style={globalStyles.imageRounded40}
                         source={{
                             uri: constants.apiIP + "download/byuser/bypath?path=" + item.OWNER_UID + "/profile.jpg",
                         }}
@@ -704,8 +673,8 @@ const JournalFooterPage = () => {
             </View>
 
             <View style={{ width: 250, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15 }}>
-                <Text style={{ color: '#9b56a2', fontWeight: '600', fontSize: 12 }}>{global.JournalName}</Text>
-                <Text style={{ color: '#9b56a2', fontWeight: '600', fontSize: 12 }}></Text>
+                <Text style={globalStyles.purpleBoldLable}>{global.JournalName}</Text>
+                <Text style={globalStyles.purpleBoldLable}></Text>
                 <View>
                     <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo}/>
                 </View>

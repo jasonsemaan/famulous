@@ -10,8 +10,7 @@ import NetInfo from "@react-native-community/netinfo";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { useIsFocused } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
-import style from "react-native-datepicker/style";
-// import { Greeting } from "../../03-constants/Interceptor";
+import { Greeting } from "../../03-constants/Interceptor";
 
 const HomePage = ({ navigation }) => {
 
@@ -55,15 +54,15 @@ const HomePage = ({ navigation }) => {
         React.useCallback(() => {
             checkConnection(0)
             toggleJournalsCategorie(0)
-          return () => console.log("return function");
+            return () => console.log("return function");
         }, [])
-      );
+    );
 
     /** get the tokenID */
     const getTokenId = () => {
         setLoading(true)
         auth().onAuthStateChanged(function (user) {
-            if(!user){
+            if (!user) {
                 setLoading(false)
                 return;
             }
@@ -77,13 +76,12 @@ const HomePage = ({ navigation }) => {
         });
     }
 
-
     /**  get params from async storage */
     const getAsyncStorageData = async () => {
         try {
             global.accessStatus = 0  // 0 if admin, 1 if contributor
             strings.setLanguage(await AsyncStorage.getItem('appLanguage'))
-            global.appLanguage=await AsyncStorage.getItem('appLanguage')
+            global.appLanguage = await AsyncStorage.getItem('appLanguage')
             setDaysLeft(strings.daysLeft)
             setContributor(strings.contributor)
             setContributors(strings.contributors)
@@ -103,14 +101,12 @@ const HomePage = ({ navigation }) => {
         }
     }
 
-
     /** function to disable the mobile back button action */
     const backAction = () => {
         // BackHandler.exitApp()
         navigation.goBack(null);
         return true;
     }
-
 
     /** function to toggle view between MyJournals btn and OtherJournals btn */
     const toggleJournalsCategorie = (status) => {
@@ -133,22 +129,20 @@ const HomePage = ({ navigation }) => {
                 setConnectionModalStatus(true)
             }
         });
-
     }
-
 
     /** call backend api and add journal to the db */
     const addJournal = () => {
         NetInfo.fetch().then(state => {
             if (state.isConnected == true) {
-                if(journalName != ""){
+                if (journalName != "") {
                     getTokenId()
                     setMyJournalCategorie_Status(true)
                     setOtherJournalCategorie_Status(false)
                     global.accessStatus = 0
                     setModalStatus(false)
                     myJournalsList.push({ journalName: journalName })
-    
+
                     fetch(constants.apiIP + "journal/create", {
                         method: 'POST',
                         headers: {
@@ -162,18 +156,16 @@ const HomePage = ({ navigation }) => {
                     })
                         .then((response) => response.json())
                         .then((responseJson) => getAllJournalsByUser(currentToken))
-                        .catch((error)=>{console.log("7 ",error)})
-                }else{
+                        .catch((error) => { console.log("7 ", error) })
+                } else {
                     this.toast.show(pleasetypeavalidjournalname, 2000)
                 }
-              
+
             } else {
                 setConnectionModalStatus(true)
             }
         });
-
     }
-
 
     /** call backend api to get the user signed profile */
     const getUserProfile = (idToken) => {
@@ -186,14 +178,13 @@ const HomePage = ({ navigation }) => {
         })
             .then((response) => response.json())
             .then((responseJson) => saveUserUid(responseJson))
-            .catch((error)=>{console.log("6 ",error)})
+            .catch((error) => { console.log("6 ", error) })
     };
 
     const saveUserUid = (responseJson) => {
         global.UserUid = responseJson.userUid;
         setSignedUserUid(responseJson.userUid)
     }
-
 
     /** call backend api to get all journals for the current user signed in */
     const getAllJournalsByUser = (idToken) => {
@@ -211,7 +202,7 @@ const HomePage = ({ navigation }) => {
         })
             .then((response) => response.json())
             .then((responseJson) => saveDataList(0, responseJson, idToken))
-            .catch((error)=>{console.log(error)})
+            .catch((error) => { console.log(error) })
     };
 
     /** call backend api to get all the invitednjournals for the current user signed in */
@@ -226,7 +217,7 @@ const HomePage = ({ navigation }) => {
         })
             .then((response) => response.json())
             .then((responseJson) => saveDataList(1, responseJson, currentToken))
-            .catch((error)=>{console.log("4 ",error)})
+            .catch((error) => { console.log("4 ", error) })
     };
 
     /** function to store data from db into a current list */
@@ -253,9 +244,9 @@ const HomePage = ({ navigation }) => {
     const getJournalsEditionsbyJournalNameAndUserUID = (index, idToken, journalName, journalRef, ownerUID, daysLeft) => {
         NetInfo.fetch().then(state => {
             if (state.isConnected == true) {
-                if(daysLeft > 0){
+                if (daysLeft > 0) {
                     setDaysLeftFromDB(daysLeft)
-                }else{
+                } else {
                     setDaysLeftFromDB(0)
                 }
                 storeInfosIntoAsyncStorage(journalName, journalRef, ownerUID)
@@ -275,7 +266,7 @@ const HomePage = ({ navigation }) => {
                 })
                     .then((response) => response.json())
                     .then((responseJson) => storeDataIntoList(responseJson))
-                    .catch((error)=>{console.log("1 ",error)})
+                    .catch((error) => { console.log("1 ", error) })
             } else {
                 setConnectionModalStatus(true)
             }
@@ -303,7 +294,7 @@ const HomePage = ({ navigation }) => {
                 })
                     .then((response) => response.json())
                     .then((responseJson) => storeDataIntoList(responseJson))
-                    .catch((error)=>{console.log("2 ",error)})
+                    .catch((error) => { console.log("2 ", error) })
             } else {
                 setConnectionModalStatus(true)
             }
@@ -323,8 +314,8 @@ const HomePage = ({ navigation }) => {
             })
         })
             .then((response) => response.json())
-            .then((responseJson) =>setContributorsNb(responseJson.length))
-            .catch((error)=>{console.log("3 ",error)})
+            .then((responseJson) => setContributorsNb(responseJson.length))
+            .catch((error) => { console.log("3 ", error) })
     }
 
     /** store parameters in the AsyncStorage */
@@ -341,10 +332,10 @@ const HomePage = ({ navigation }) => {
 
     /** function to store the response editions data into a current list */
     const storeDataIntoList = (response) => {
-        var list=[];
-        for(let i=0;i<response.length;i++){
-            if(response[i].archived!=true){
-            list.push({coverImage:response[i].coverImage, editionRef:response[i].editionRef, journalRef:response[i].journalRef, releaseDateFormated:response[i].releaseDateFormated})
+        var list = [];
+        for (let i = 0; i < response.length; i++) {
+            if (response[i].archived != true) {
+                list.push({ coverImage: response[i].coverImage, editionRef: response[i].editionRef, journalRef: response[i].journalRef, releaseDateFormated: response[i].releaseDateFormated })
             }
         }
         setLoading(false)
@@ -361,32 +352,36 @@ const HomePage = ({ navigation }) => {
 
     /** function to check if internet connection is enable or not */
     const checkConnection = (param) => {
-        if(param === 0){
-        NetInfo.fetch().then(state => {
-            if (state.isConnected == true) {
-                getTokenId();
-                setIsConnectedToInternet(true)
-                setConnectionModalStatus(false)
-            } else {
-                getAsyncStorageData()
-                setIsConnectedToInternet(false)
-                setConnectionModalStatus(false)
-                setLoading(false)
-            }
-        });
-    }else{
-        NetInfo.fetch().then(state => {
-            if (state.isConnected == true) {
-                getTokenId();
-                setIsConnectedToInternet(true)
-                setConnectionModalStatus(false)
-            } else {
-                getAsyncStorageData()
-                setConnectionModalStatus(true)
-                setLoading(false)
-            }
-        });
+        if (param === 0) {
+            NetInfo.fetch().then(state => {
+                if (state.isConnected == true) {
+                    getTokenId();
+                    setIsConnectedToInternet(true)
+                    setConnectionModalStatus(false)
+                } else {
+                    getAsyncStorageData()
+                    setIsConnectedToInternet(false)
+                    setConnectionModalStatus(false)
+                    setLoading(false)
+                }
+            });
+        } else {
+            NetInfo.fetch().then(state => {
+                if (state.isConnected == true) {
+                    getTokenId();
+                    setIsConnectedToInternet(true)
+                    setConnectionModalStatus(false)
+                } else {
+                    getAsyncStorageData()
+                    setConnectionModalStatus(true)
+                    setLoading(false)
+                }
+            });
+        }
     }
+
+    const consoleAlert = () => {
+        console.log("ping")
     }
 
     useEffect(() => {
@@ -440,7 +435,7 @@ const HomePage = ({ navigation }) => {
             } else if (releaseDate[0] == "December") {
                 month = "Décembre"
             }
-        
+
         } else {
             month = releaseDate[0]
         }
@@ -479,6 +474,7 @@ const HomePage = ({ navigation }) => {
             />
             {isConnectedToInternet == true ? (
                 <SafeAreaView style={globalStyles.flexWithBackgroundWhite}>
+
                     <View style={globalStyles.home_header_div}>
                         <View style={globalStyles.home_header_row_div}>
                             <TouchableWithoutFeedback onPress={() => navigation.openDrawer()}>
@@ -486,9 +482,9 @@ const HomePage = ({ navigation }) => {
                                     <Image source={require('../../assets/home_menu_icon.png')} style={globalStyles.home_menu_logo} />
                                 </View>
                             </TouchableWithoutFeedback>
-                            <Image source={require('../../assets/famulous_logo.png')}  style={globalStyles.home_famulous_logo}/>
+                            <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.home_famulous_logo} />
                             <TouchableOpacity activeOpacity={0.8} style={{ marginRight: 10 }} onPress={() => setModalStatus(true)}>
-                                <Image source={require('../../assets/home_plus_icon.png')} style={globalStyles.home_plus_logo}/>
+                                <Image source={require('../../assets/home_plus_icon.png')} style={globalStyles.home_plus_logo} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -516,13 +512,13 @@ const HomePage = ({ navigation }) => {
 
                         <View style={globalStyles.row_div_homePage_contributorsDaysLeft}>
                             <View style={globalStyles.row_div_homePage_singleView_DaysLeft_Contributors}>
-                                <Image source={require('../../assets/group.png')} style={{width:18, height:18 ,marginRight: 5, marginLeft: 5 }}/>
+                                <Image source={require('../../assets/group.png')} style={{ width: 18, height: 18, marginRight: 5, marginLeft: 5 }} />
                                 <Text style={globalStyles.home_listItem_Contributors_Days}>{contributorsNb} {contributorss}</Text>
                             </View>
                             {accessStatus === 0 ? (
                                 <View style={globalStyles.row_div_homePage_singleView_DaysLeft_Contributors}>
                                     <Text style={globalStyles.home_listitem_bulletpoint}>•</Text>
-                                    <Image source={require('../../assets/clock.png')} style={{ width: 18, height: 18, marginRight: 5 }}/>
+                                    <Image source={require('../../assets/clock.png')} style={{ width: 18, height: 18, marginRight: 5 }} />
                                     <Text style={globalStyles.home_listItem_Contributors_Days}>{daysLeftFromDB} {daysLeft}</Text>
                                 </View>
                             ) : null}
@@ -537,7 +533,7 @@ const HomePage = ({ navigation }) => {
                                 <FlatList showsVerticalScrollIndicator={false} data={journalEditionsList} renderItem={_renderItem} />
                             ) :
                                 <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
-                                    <Image source={require('../../assets/emptyJournal.png')} style={globalStyles.noInternetIconwidth60}/>
+                                    <Image source={require('../../assets/emptyJournal.png')} style={globalStyles.noInternetIconwidth60} />
                                     <Text style={globalStyles.blackBoldLabel}>{youhavenojournalsatthismoment}</Text>
                                     <Text style={globalStyles.textColorGrey}>{addJournalswiththeplusButton}</Text>
                                 </View>
@@ -548,7 +544,7 @@ const HomePage = ({ navigation }) => {
             ) :
                 <SafeAreaView style={globalStyles.flexWithBackgroundWhite}>
                     <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
-                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIconwidth60}/>
+                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIconwidth60} />
                         <Text style={globalStyles.blackBoldLabel}>{noInternetConnection}</Text>
                         <Text style={globalStyles.textColorGrey}>{checkyourconnectionthenrefreshthepage}</Text>
                         <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection(0)}>
@@ -563,12 +559,12 @@ const HomePage = ({ navigation }) => {
             <Modal transparent={true} visible={modalStatus}>
                 <TouchableOpacity activeOpacity={0} style={globalStyles.viewFlex1} onPress={() => setModalStatus(false)}>
                     <View style={globalStyles.modalDivstyle}>
-                        <View style={{ backgroundColor: '#ffffff', padding: 5, height: '25%', borderTopLeftRadius:30,borderTopRightRadius:30, alignItems: 'center',}}>
+                        <View style={{ backgroundColor: '#ffffff', padding: 5, height: '25%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
                             <View style={globalStyles.modalViewfullWidthPadding10}>
                                 <View style={globalStyles.alignItemsCenter}>
-                                        <View style={globalStyles.calendarModal_InputView}>
-                                            <TextInput style={globalStyles.calendarModal_textInput} underlineColorAndroid="transparent" onChangeText={(text) => setJournalName(text)} placeholder={journalNameLabel} placeholderTextColor='#A5A5A5' />
-                                        </View>
+                                    <View style={globalStyles.calendarModal_InputView}>
+                                        <TextInput style={globalStyles.calendarModal_textInput} underlineColorAndroid="transparent" onChangeText={(text) => setJournalName(text)} placeholder={journalNameLabel} placeholderTextColor='#A5A5A5' />
+                                    </View>
                                 </View>
                                 <View>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => addJournal()}>
@@ -591,7 +587,7 @@ const HomePage = ({ navigation }) => {
                             <View style={globalStyles.modalSubDivstyle2}>
                                 <View style={globalStyles.modalSubDivstyle3}>
                                     <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIcon}/>
+                                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIcon} />
                                         <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
                                     </View>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection(1)}>
@@ -605,7 +601,7 @@ const HomePage = ({ navigation }) => {
                     </View>
                 </TouchableOpacity>
             </Modal>
-           
+
         </View>
     );
 

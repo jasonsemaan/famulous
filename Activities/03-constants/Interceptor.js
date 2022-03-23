@@ -1,6 +1,7 @@
 import fetchIntercept from 'fetch-intercept';
 import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, BackHandler, TextInput, ImageBackground } from "react-native";
+import { globalStyles } from './global';
 
 export const callIntercept = (api) => {
     console.log(api)
@@ -25,8 +26,12 @@ export const unregister = fetchIntercept.register({
     }
 });
 
+
+
 export class Greeting extends React.Component{
     render() {
-      return <Text>{this.props.name}</Text>;
+      return  <Text>{this.props.name}</Text>
     }
   }
+
+ 

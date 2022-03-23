@@ -572,10 +572,9 @@ export const globalStyles = StyleSheet.create({
     },
     ShippingAddress_AllinfoView: {
         flex: 1, marginLeft: 30, marginRight: 30, borderRadius: 10, shadowColor: 'black', marginTop: 20, marginBottom: 20,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-        shadowOpacity: 0.6,
-        elevation: 4, backgroundColor: 'white',
+        shadowOffset: { width: 0, height: 1 }, shadowRadius: 2,
+        shadowOpacity: 0.6, elevation: 4, 
+        backgroundColor: 'white',
         padding: 15,
     },
     ShippingAddress_titleInput: {
@@ -591,19 +590,6 @@ export const globalStyles = StyleSheet.create({
         marginTop: 5
     },
     ShippingAddress_inputText: {
-        // display: 'flex',
-        // justifyContent: 'center',
-        // backgroundColor: '#fff',
-        // borderWidth: 0.5,
-        // borderColor: '#D5D5D5',
-        // borderRadius: 5,
-        // marginLeft: 5,
-        // marginRight: 5,
-        // marginTop: 10,
-        // padding: 0,
-        // color: 'black',
-        // fontSize: 13,
-        // height: 35
         alignSelf: 'center', height: 35, marginLeft: 10, padding: 0, fontSize: 12, color: 'black',
     },
     ShippingAddress_inputText_3sur4: {
@@ -809,11 +795,8 @@ export const globalStyles = StyleSheet.create({
         marginBottom: 5,
         height: 500,
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 5,
-        shadowOpacity: 0.26,
-        elevation: 8,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 5, shadowOpacity: 0.26, elevation: 8,
     },
     ShippingAddress_delete_icon: {
         width: 30,
@@ -1056,11 +1039,8 @@ export const globalStyles = StyleSheet.create({
         height: 35,
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 3,
-        shadowOpacity: 0.3,
-        elevation: 4,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowRadius: 3,
+        shadowOpacity: 0.3, elevation: 4,
     },
     purple_default_text: {
         color: '#9b56a2',
@@ -1141,11 +1121,8 @@ export const globalStyles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 5,
-        shadowOpacity: 0.26,
-        elevation: 8,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 5, shadowOpacity: 0.26, elevation: 8,
         margin: 10,
         borderRadius: 10
     },
@@ -1345,11 +1322,8 @@ export const globalStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 1,
-        shadowOpacity: 0.1,
-        elevation: 1,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 1, shadowOpacity: 0.1, elevation: 1,
     },
     portrait_width100_preview: {
         width: '100%',
@@ -1397,10 +1371,8 @@ export const globalStyles = StyleSheet.create({
         width: '75%',
         backgroundColor: 'white',
         shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-        shadowOpacity: 0.1,
-        elevation: 1,
+        shadowOffset: { width: 0, height: 1 }, shadowRadius: 2,
+        shadowOpacity: 0.1, elevation: 1,
     },
     landscape_width100_preview: {
         width: '75%',
@@ -1458,11 +1430,8 @@ export const globalStyles = StyleSheet.create({
         padding: 30,
         alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 5,
-        shadowOpacity: 0.26,
-        elevation: 3,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 5, shadowOpacity: 0.26, elevation: 3,
         borderRadius: 5,
         marginTop: 15,
         marginBottom: 10
@@ -1473,11 +1442,8 @@ export const globalStyles = StyleSheet.create({
         height: 550,
         alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 5,
-        shadowOpacity: 0.26,
-        elevation: 3,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 5, shadowOpacity: 0.26, elevation: 3,
         borderRadius: 5,
         marginTop: 15,
         marginBottom: 10
@@ -1488,11 +1454,8 @@ export const globalStyles = StyleSheet.create({
         height: 550,
         alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 5,
-        shadowOpacity: 0.26,
-        elevation: 3,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 5, shadowOpacity: 0.26, elevation: 3,
         borderRadius: 5,
         marginTop: 15,
         marginBottom: 10
@@ -1619,19 +1582,15 @@ export const globalStyles = StyleSheet.create({
     sorting_header: {
         flexDirection: 'row',
         padding: 10, backgroundColor: 'white', shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 1,
-        shadowOpacity: 0.1,
-        elevation: 3,
+        shadowOffset: { width: 0, height: 1 }, shadowRadius: 1,
+        shadowOpacity: 0.1, elevation: 3,
     },
     JournalDetails_header: {
         width: '100%',
         flexDirection: 'row',
         padding: 15, backgroundColor: 'white', shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 1,
-        shadowOpacity: 0.1,
-        elevation: 3,
+        shadowOffset: { width: 0, height: 1 }, shadowRadius: 1,
+        shadowOpacity: 0.1, elevation: 3,
     },
     calendarModal_textInput: {
         width: 300, alignSelf: 'center', height: 37, fontSize: 12, color: 'black'
@@ -1678,22 +1637,16 @@ export const globalStyles = StyleSheet.create({
     imageLayouts_mainDiv: {
         flex: 1, width: 120, height: 120, padding: 5, alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-        shadowOpacity: 0.6,
-        elevation: 3,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8, shadowOpacity: 0.6, elevation: 3,
         margin: 20,
         borderRadius: 2, flexDirection: 'row'
     },
     imageLayout_landscapeWithDesc: {
         flex: 1, width: 120, height: 120, padding: 5, alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-        shadowOpacity: 0.6,
-        elevation: 3,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8, shadowOpacity: 0.6, elevation: 3,
         margin: 20,
         borderRadius: 2,
         justifyContent: 'center', alignItems: 'center'
@@ -1701,11 +1654,8 @@ export const globalStyles = StyleSheet.create({
     imageLayout_landscapeWithDesc_Selected: {
         flex: 1, width: 120, height: 120, padding: 5, alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 4,
-        shadowOpacity: 0.1,
-        elevation: 2,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, 
+        shadowRadius: 4, shadowOpacity: 0.1, elevation: 2,
         margin: 20,
         borderRadius: 2,
         justifyContent: 'center', alignItems: 'center',
@@ -1715,11 +1665,8 @@ export const globalStyles = StyleSheet.create({
     imageLayouts_mainDiv_Selected: {
         flex: 1, width: 120, height: 120, padding: 5, alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 4,
-        shadowOpacity: 0.1,
-        elevation: 2,
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 4, shadowOpacity: 0.1, elevation: 2,
         margin: 20,
         borderRadius: 2, flexDirection: 'row',
         borderColor: '#febf2e',
@@ -1733,39 +1680,28 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
         alignSelf: 'center',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-        shadowOpacity: 0.1,
-        elevation: 1,
-        marginTop: 10
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowRadius: 2,
+        shadowOpacity: 0.1, elevation: 1, marginTop: 10
     },
     journalDetails_PortraitImageFullScreen_divDesc: {
-        width: '75%',
-        height: 360,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        alignSelf: 'center',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-        shadowOpacity: 0.1,
-        elevation: 1,
-        marginTop: 10
+        width: '75%', 
+        height: 360, 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        backgroundColor: 'white', 
+        alignSelf: 'center', 
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, 
+        shadowRadius: 2, shadowOpacity: 0.1, elevation: 1, marginTop: 10
     },
+
     journalDetails_LandscapeImageFullScreen_divDesc: {
-        width: '95%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '95%', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
         backgroundColor: 'white',
-        alignSelf: 'center',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-        shadowOpacity: 0.1,
-        elevation: 1,
-        margin: 10
+        alignSelf: 'center', 
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 2, shadowOpacity: 0.1, elevation: 1, margin: 10
     },
 
     journal_Preview_portraitFullScreen: {
@@ -1783,11 +1719,9 @@ export const globalStyles = StyleSheet.create({
     calendarRight_FixIcon: {
         alignSelf: 'flex-end', position: 'absolute', bottom: 25, right: 25
     },
-
     noInternetConnectionLabelStyle: {
         fontSize: 12, marginLeft: 20, color: 'black'
     },
-
     modalDivstyle: {
         backgroundColor: '#000000aa', flex: 1, display: 'flex', justifyContent: 'flex-end'
     },
@@ -1800,19 +1734,15 @@ export const globalStyles = StyleSheet.create({
     modalSubDivstyle3: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'
     },
-
     viewRowAlignCenter: {
         flexDirection: 'row', alignItems: 'center'
     },
-
     noInternetIcon: {
         width: 30, height: 30, marginLeft: 10
     },
     noInternetIconwidth60: {
         width: 60, height: 60, marginBottom: 30
     },
-
-
     refreshLabelStyle: {
         fontSize: 14, fontWeight: 'bold', color: '#5ec6ca', marginRight: 20
     },
@@ -1828,7 +1758,6 @@ export const globalStyles = StyleSheet.create({
     checkEmptyResultFlexAlignCenter: {
         flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5'
     },
-
     blackBoldLabel: {
         marginBottom: 10, fontSize: 16, fontWeight: 'bold', color: 'black'
     },
@@ -2027,5 +1956,14 @@ export const globalStyles = StyleSheet.create({
     calendarMainModalView2:{
         flex: 1, width: '100%', justifyContent: 'center', padding: 10, marginTop: 30 
     },
+    viewFlexRowCenterWithMargin:{
+        flexDirection: 'row', justifyContent: 'center', alignItems: 'center', margin: 10
+    },
+    imageRounded40:{ 
+        width: 40, height: 40, borderRadius: 40 / 2 
+    },
+    purpleBoldLable:{
+         color: '#9b56a2', fontWeight: '600', fontSize: 12 
+    }
 
 })

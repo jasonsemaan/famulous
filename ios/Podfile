@@ -16,10 +16,8 @@ target 'Famulus' do
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 
-  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
 
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
 
   target 'FamulusTests' do

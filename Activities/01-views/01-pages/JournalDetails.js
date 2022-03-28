@@ -13,6 +13,8 @@ import NetInfo from "@react-native-community/netinfo";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { constants } from "../../03-constants/Constants";
 import { PortraitDescription, PortraitNoDescription, PortraitFullDescription, PortraitFullNoDescription, LandscapeDescription, LandscapeNoDescription, ModalDetailsComponent, MainLandscapeDescView, MainPortraitNoDescView, MainPortraitFullView, MainLandscapeNoDescView } from "../02-components/JournalDetailsComponents";
+import { getUser } from "../03-providers/UserProvider";
+import { StoreImage } from "../03-providers/ImagesProvider";
 
 var jsonLayoutsData = [
     { id: 1, type: "portraitDesc" },
@@ -63,7 +65,6 @@ const JournalDetails = ({ route, navigation }) => {
     let [noInternetConnection, setNoInternetConnection] = useState("No Internet connection");
     let [refresh, setRefresh] = useState("Refresh");
     let [chooseyourimagelayout, setChooseyourimagelayout] = useState("Choose your image layout");
-
 
     /** function to change view by index of layout selected in the horizontal flatlist */
     const toggleLayoutView = (value) => {
@@ -189,11 +190,9 @@ const JournalDetails = ({ route, navigation }) => {
             }
             user.getIdToken().then(function (idToken) {
                 global.Token = idToken
-                
                 getUserProfile(idToken)
                 setCurrentToken(idToken)
             });
-
         });
     }
 
@@ -236,13 +235,7 @@ const JournalDetails = ({ route, navigation }) => {
     /** call backend api to get the user signed profile */
     const getUserProfile = (idToken) => {
         setLoading(true)
-        fetch(constants.apiIP + "userProfile/getUserProfile", {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                "Authorization": "Bearer " + idToken
-            },
-        })
+        getUser(idToken)
             .then((response) => response.json())
             .then((responseJson) => storeUserProfile(responseJson))
             .catch((error) => { console.log(error) })
@@ -294,14 +287,7 @@ const JournalDetails = ({ route, navigation }) => {
                 data.append('fullScreen', isFullScreen)
                 data.append('coverImage', false)
 
-                fetch(constants.apiIP + "journal/storeImage", {
-                    method: 'post',
-                    body: data,
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        "Authorization": "Bearer " + currentToken
-                    },
-                })
+                StoreImage(currentToken, data)
                     .then((response) => response.json())
                     .then((responseJson) => checkImageStatus(responseJson))
                     .catch((error) => { console.log(error) })
@@ -337,7 +323,6 @@ const JournalDetails = ({ route, navigation }) => {
             }
         });
     }
-
 
     useEffect(() => {
         checkConnection();
@@ -396,7 +381,6 @@ const JournalDetails = ({ route, navigation }) => {
             );
         }
     };
-
 
     return (
         <SafeAreaView style={globalStyles.JournalDetails_main_Container}>
@@ -480,7 +464,6 @@ const JournalDetails = ({ route, navigation }) => {
                                             </View>
                                         </View>
                                     </View>
-
                                 ) : isLandscapeViewDesc ? (
                                     <View>
                                         <View style={globalStyles.journal_upload_item_view_landscape}>
@@ -503,7 +486,6 @@ const JournalDetails = ({ route, navigation }) => {
                                             </View>
                                         </View>
                                     </View>
-
                                 ) : isPortraitView ? (
                                     <View style={globalStyles.journal_upload_item_view_portrait}>
                                         <View style={globalStyles.portrait_width50}>
@@ -513,9 +495,8 @@ const JournalDetails = ({ route, navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                         </View>
-                                        <MainPortraitNoDescView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate}/>
+                                        <MainPortraitNoDescView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate} />
                                     </View>
-
                                 ) : isPortraitViewFull ? (
                                     <View style={globalStyles.journal_upload_item_view_portraitFullScreen}>
                                         <TouchableOpacity activeOpacity={0.5} style={globalStyles.viewFlex1} onPress={() => openGallery()}>
@@ -523,7 +504,7 @@ const JournalDetails = ({ route, navigation }) => {
                                                 {renderFileUri()}
                                             </View>
                                         </TouchableOpacity>
-                                        <MainPortraitFullView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate}/>
+                                        <MainPortraitFullView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate} />
                                     </View>
                                 ) : isPortraitViewFullDesc ? (
                                     <View style={globalStyles.journal_upload_item_view_portraitFullScreen}>
@@ -541,7 +522,7 @@ const JournalDetails = ({ route, navigation }) => {
                                                 value={description}
                                                 onChangeText={(text) => setDescription(text)} />
                                         </View>
-                                      <MainPortraitFullView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate}/>
+                                        <MainPortraitFullView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate} />
                                     </View>
                                 ) : isLandscapeView ? (
                                     <View style={globalStyles.journal_upload_item_view_landscape}>
@@ -550,7 +531,7 @@ const JournalDetails = ({ route, navigation }) => {
                                                 {renderFileUri()}
                                             </View>
                                         </TouchableOpacity>
-                                        <MainLandscapeNoDescView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate}/>
+                                        <MainLandscapeNoDescView signedUserUid={signedUserUid} signedUserName={signedUserName} currentDate={currentDate} />
                                     </View>
                                 ) : null
                                 }
@@ -560,9 +541,11 @@ const JournalDetails = ({ route, navigation }) => {
                                 <Text style={{ fontSize: 10, color: '#9b56a2', fontWeight: '600' }}>{chooseyourimagelayout}</Text>
                             </View>
                             <View>
-                                <FlatList showsHorizontalScrollIndicator={false} data={jsonLayoutsData} renderItem={_renderItemLayoutsData} horizontal={true} />
+                               <FlatList showsHorizontalScrollIndicator={false} 
+                                            data={jsonLayoutsData} 
+                                            renderItem={_renderItemLayoutsData} 
+                                            horizontal={true} />    
                             </View>
-
                             <View style={{ marginBottom: 30 }}>
                                 {imageSelected != "" ? (
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => uploadImagetoJournalEdition()}>

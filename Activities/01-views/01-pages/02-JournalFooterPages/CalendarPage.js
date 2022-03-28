@@ -9,7 +9,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { strings } from "../../../../App";
 import NetInfo from "@react-native-community/netinfo";
 import Toast, { DURATION } from 'react-native-easy-toast';
-import { constants } from "../../../03-constants/Constants";
+import { ModalConnection } from "../../02-components/ConnectionComponent";
+import { CreateEvent, DeleteEvent, GetEditionEvents } from "../../03-providers/EventsProvider";
 
 const CalendarPage = ({ route, navigation }) => {
 
@@ -58,16 +59,7 @@ const CalendarPage = ({ route, navigation }) => {
     /** get all events to the selected edition from DB */
     const getEditionEvents = (editionRef) => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/getEditionEvents", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                editionRef: editionRef,
-            })
-        })
+        GetEditionEvents(editionRef)
             .then((response) => response.json())
             .then((responseJson) => saveResponseData(responseJson))
             .catch((error)=>{console.log(error)})
@@ -85,19 +77,7 @@ const CalendarPage = ({ route, navigation }) => {
     /** add event to DB */
     const addEventToDB = () => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/createEvent", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                "Authorization": "Bearer " + currentToken
-            },
-            body: JSON.stringify({
-                editionRef: global.EditionRef,
-                eventDate: selectedDate,
-                eventDescription: eventDescription
-            })
-        })
+        CreateEvent(currentToken, global.EditionRef, selectedDate, eventDescription)
             .then((response) => response.json())
             .then((responseJson) => addingEvent(responseJson))
             .catch((error)=>{console.log(error)})
@@ -105,16 +85,7 @@ const CalendarPage = ({ route, navigation }) => {
 
     /** delete event from DB */
     const deleteEventFromDB = (eventRef) => {
-        fetch(constants.apiIP + "journal/deleteEditionEvent", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                eventRef: eventRef,
-            })
-        })
+        DeleteEvent(eventRef)
             .then((response) => response.json())
             .then((responseJson) => console.log(responseJson))
             .catch((error)=>{console.log(error)})
@@ -296,27 +267,8 @@ const CalendarPage = ({ route, navigation }) => {
                     fadeInDuration={500}
                     fadeOutDuration={500} />
             </Modal>
-            <Modal transparent={true} visible={connectionModalStatus}>
-                <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-                    <View style={globalStyles.modalDivstyle}>
-                        <View style={globalStyles.modalSubDivstyle}>
-                            <View style={globalStyles.modalSubDivstyle2}>
-                                <View style={globalStyles.modalSubDivstyle3}>
-                                    <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../../assets/no-internet.png')} style={globalStyles.noInternetIcon}/>
-                                        <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                                    </View>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+            <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
+
         </View>
     );
 }

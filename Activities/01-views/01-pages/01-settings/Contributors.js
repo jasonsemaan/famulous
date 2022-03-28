@@ -9,6 +9,8 @@ import Toast from 'react-native-easy-toast';
 import Spinner from 'react-native-loading-spinner-overlay';
 import NetInfo from "@react-native-community/netinfo";
 import { constants } from "../../../03-constants/Constants";
+import { ModalConnection } from "../../02-components/ConnectionComponent";
+import { GetAllJournalContributors, GetKey, InsertAdminSharedkey, RemoveContributorFromInvites } from "../../03-providers/JournalProvider";
 
 const Contributors = ({ route, navigation }) => {
     var admin = route.params.admin
@@ -93,16 +95,7 @@ const Contributors = ({ route, navigation }) => {
     /** insert admin and the key into DB */
     const getAllContributors = (journalRef) => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/getAllJournalContributors", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                journalRef: journalRef,
-            })
-        })
+        GetAllJournalContributors(journalRef)
             .then((response) => response.json())
             .then((responseJson) => saveResponseIntoList(responseJson))
             .catch((error)=>{console.log(error)})
@@ -116,12 +109,7 @@ const Contributors = ({ route, navigation }) => {
 
     /** get the random key from DB */
     const getKeyFromDB = () => {
-        fetch(constants.apiIP + "journal/generateKey", {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-            },
-        })
+        GetKey()
             .then((response) => response.json())
             .then((responseJson) => setKey(responseJson.key))
             .catch((error)=>{console.log(error)})
@@ -130,18 +118,7 @@ const Contributors = ({ route, navigation }) => {
     /** insert admin and the key into DB */
     const insertAdminSharedKey = (idToken) => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/insertAdminSharedKey", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                "Authorization": "Bearer " + idToken
-            },
-            body: JSON.stringify({
-                journalRef: global.JournalRef,
-                pinCode: key
-            })
-        })
+        InsertAdminSharedkey(idToken, global.JournalRef, key)
             .then((response) => response.json())
             .then((responseJson) => whenSuccessInsert(responseJson))
             .catch((error)=>{console.log(error)})
@@ -180,17 +157,7 @@ const Contributors = ({ route, navigation }) => {
         NetInfo.fetch().then(state => {
             if (state.isConnected == true) {
                 setLoading(true)
-                fetch(constants.apiIP + "journal/removeContributorFromInvites", {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        journalRef: global.JournalRef,
-                        contributorUid: contributorUid
-                    })
-                })
+                RemoveContributorFromInvites(global.JournalRef, contributorUid)
                     .then((response) => response.json())
                     .then(getAllContributors(global.JournalRef))
                     .catch((error)=>{console.log(error)})
@@ -200,7 +167,6 @@ const Contributors = ({ route, navigation }) => {
             }
         })
     }
-
 
     /** get params from async storage */
     const getAsyncStorageDataForNoConnection = async () => {
@@ -354,27 +320,8 @@ const Contributors = ({ route, navigation }) => {
                 </TouchableOpacity>
             </Modal>
 
-            <Modal transparent={true} visible={connectionModalStatus}>
-                <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-                    <View style={globalStyles.modalDivstyle}>
-                        <View style={globalStyles.modalSubDivstyle}>
-                            <View style={globalStyles.modalSubDivstyle2}>
-                                <View style={globalStyles.modalSubDivstyle3}>
-                                    <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../../assets/no-internet.png')} style={globalStyles.noInternetIcon}/>
-                                        <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                                    </View>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+            <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
+
             <Toast ref={(toast) => this.toast = toast}
                 style={{ borderRadius: 20 }}
                 fadeInDuration={500}

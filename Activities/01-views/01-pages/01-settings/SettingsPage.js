@@ -10,6 +10,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import FastImage from 'react-native-fast-image'
 import NetInfo from "@react-native-community/netinfo";
 import { constants } from "../../../03-constants/Constants";
+import { ModalConnection } from "../../02-components/ConnectionComponent";
+import { DeleteJournal, UpdateJournalName } from "../../03-providers/JournalProvider";
+import { UpdateCoverImage } from "../../03-providers/ImagesProvider";
 
 const countries = ["Italic", "Bold", "Arial"]
 
@@ -37,7 +40,6 @@ const SettingsPage = ({ route, navigation }) => {
   let [toProceedorClose, setToProceedorClose] = useState("to proceed or close to cancel.");
   let [deleteLabel, setDeleteLabel] = useState("Delete");
   let [submit, setSubmit] = useState("Submit");
-  let [thejournalhassuccessfullydeleted, setThejournalhassuccessfullydeleted] = useState("The journal has successfully deleted");
   let [pleasetypeavalidjournalname, setPleasetypeavalidjournalname] = useState("Please type a valid journal name");
   let [noInternetConnection, setNoInternetConnection] = useState("No Internet connection");
   let [refresh, setRefresh] = useState("Refresh");
@@ -84,14 +86,7 @@ const SettingsPage = ({ route, navigation }) => {
             data.append('imgDescriptionVisible', '')
             data.append('fullScreen', '')
             data.append('coverImage', true)
-            fetch(constants.apiIP + "journal/insertUpdateCoverPicture", {
-              method: 'post',
-              body: data,
-              headers: {
-                "Content-Type": "multipart/form-data",
-                "Authorization": "Bearer " + global.Token
-              },
-            })
+            UpdateCoverImage(global.Token, data)
               .then((response) => response.json())
               .then(this.toast.show('Your Journal cover image has updated successfully', 2000), navigation.navigate("Root"))
               .catch((error) => { console.log(error) })
@@ -131,7 +126,6 @@ const SettingsPage = ({ route, navigation }) => {
       setToProceedorClose(strings.toProceedorClose)
       setDeleteLabel(strings.delete)
       setSubmit(strings.submit)
-      setThejournalhassuccessfullydeleted(strings.thejournalhassuccessfullydeleted)
       setPleasetypeavalidjournalname(strings.pleasetypeavalidjournalname)
       setNoInternetConnection(strings.noInternetConnection)
       setRefresh(strings.refresh)
@@ -154,16 +148,7 @@ const SettingsPage = ({ route, navigation }) => {
   const deleteJournalFromDB = (journalRef) => {
     NetInfo.fetch().then(state => {
       if (state.isConnected == true) {
-        fetch(constants.apiIP + "journal/deleteJournal", {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            journalRef: journalRef,
-          })
-        })
+        DeleteJournal(journalRef)
           .then((response) => response.json())
           .then(navigation.navigate("Root"))
           .catch((error) => { console.log(error) })
@@ -174,21 +159,10 @@ const SettingsPage = ({ route, navigation }) => {
     })
   }
 
-
   /** update Journal Name */
   const updateJournalName = () => {
     setLoading(true)
-    fetch(constants.apiIP + "journal/updateJournalName", {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        journalRef: global.JournalRef,
-        journalName: currentJournalName
-      })
-    })
+    UpdateJournalName(global.JournalRef, currentJournalName)
       .then((response) => response.json())
       .then(navigation.navigate("Root"))
       .catch((error) => { console.log(error) })
@@ -368,44 +342,19 @@ const SettingsPage = ({ route, navigation }) => {
                 </View>
               </View>
             </View>
-
           </View>
         </TouchableOpacity>
       </Modal>
-
-      <Modal transparent={true} visible={connectionModalStatus}>
-        <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-          <View style={globalStyles.modalDivstyle}>
-            <View style={globalStyles.modalSubDivstyle}>
-              <View style={globalStyles.modalSubDivstyle2}>
-                <View style={globalStyles.modalSubDivstyle3}>
-                  <View style={globalStyles.viewRowAlignCenter}>
-                    <Image source={require('../../../assets/no-internet.png')} style={globalStyles.noInternetIcon} />
-                    <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                  </View>
-                  <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                    <View style={{ padding: 10 }}>
-                      <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
       <Toast ref={(toast) => this.toast = toast}
         style={{ borderRadius: 20 }}
         fadeInDuration={500}
         fadeOutDuration={500} />
     </View>
-
   );
 }
 
 const styles = StyleSheet.create({
-
 })
 
 export default SettingsPage;

@@ -1964,6 +1964,21 @@ export const globalStyles = StyleSheet.create({
     },
     purpleBoldLable:{
          color: '#9b56a2', fontWeight: '600', fontSize: 12 
+    },
+    viewWidthHeigth100:{
+         width: '100%', height: '100%' 
+    },
+    labelWhiteBold:{
+         color: 'white', fontWeight: 'bold' 
+    },
+    previewCoverView:{
+         backgroundColor: '#5ec6ca', padding: 5, justifyContent: 'center', alignItems: 'center', width: '60%', marginTop: 'auto', top: 15, borderRadius: 5 
+    },
+    previewSinglePageFooterView:{
+        width: '95%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15 
+    },
+    previewFooterPageItemListView:{
+        width: 250, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15
     }
 
 })

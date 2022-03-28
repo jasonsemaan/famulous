@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity, Alert, Modal } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
 import { globalStyles } from "../../../Activities/03-constants/global";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import { strings } from "../../../App";
@@ -9,6 +9,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import NetInfo from "@react-native-community/netinfo";
 import auth, { firebase } from '@react-native-firebase/auth';
 import { constants } from "../../03-constants/Constants";
+import { ModalConnection } from "../02-components/ConnectionComponent";
+import { DeleteImage, GetSingleEditionImages } from "../03-providers/ImagesProvider";
 
 const JournalSorting = ({ route, navigation }) => {
     var adminName = route.params.adminName
@@ -41,7 +43,6 @@ const JournalSorting = ({ route, navigation }) => {
             });
         });
     }
-
 
     /** get params from async storage */
     const getAsyncStorageDataForNoConnection = async () => {
@@ -76,17 +77,7 @@ const JournalSorting = ({ route, navigation }) => {
     /** call backend api to get all single images from the db */
     const getJournalEditionImages = (idToken, editionRef) => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/selectSingleEditionImages", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                "Authorization": "Bearer " + idToken
-            },
-            body: JSON.stringify({
-                editionRef: editionRef
-            })
-        })
+        GetSingleEditionImages(idToken, editionRef)
             .then((response) => response.json())
             .then((responseJson) => storeData(responseJson))
             .catch((error)=>{console.log(error)})
@@ -97,7 +88,6 @@ const JournalSorting = ({ route, navigation }) => {
         setImagesList(responseJson)
         setLoading(false)
     }
-
 
     /** popup alert to delete item from list or cancel request */
     const alertRemove = (imageRef) => {
@@ -136,16 +126,7 @@ const JournalSorting = ({ route, navigation }) => {
     /** delete Image from DB */
     const deleteImageFromDB = (imageRef) => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/deleteImage", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                imgStoreRef: imageRef,
-            })
-        })
+        DeleteImage(imageRef)
             .then((response) => response.json())
             .then(getJournalEditionImages(currentIdToken, global.EditionRef))
             .catch((error)=>{console.log(error)})
@@ -182,7 +163,6 @@ const JournalSorting = ({ route, navigation }) => {
             </View>
         );
     };
-
 
 
     /** function to seperate flatlist items, >30 and <=30 */
@@ -226,7 +206,6 @@ const JournalSorting = ({ route, navigation }) => {
                                 <TouchableOpacity onPress={() => alertRemove(item.imgStoreRef)}>
                                     <Image source={require('../../assets/delete.png')} style={{ width: 25, height: 25 }} />
                                 </TouchableOpacity>
-                                {/* <Image source={require('../../../assets/sort.png')} style={{ width: 20, height: 20 }} /> */}
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -269,11 +248,8 @@ const JournalSorting = ({ route, navigation }) => {
                     </TouchableOpacity>
                 </View>
             )
-
         }
-
     }
-
 
     return (
         <View style={globalStyles.JournalSorting_main_Container}>
@@ -327,35 +303,11 @@ const JournalSorting = ({ route, navigation }) => {
                     </View>
                 }
             </SafeAreaView>
+            <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
 
-            <Modal transparent={true} visible={connectionModalStatus}>
-                <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-                    <View style={globalStyles.modalDivstyle}>
-                        <View style={globalStyles.modalSubDivstyle}>
-                            <View style={globalStyles.modalSubDivstyle2}>
-                                <View style={globalStyles.modalSubDivstyle3}>
-                                    <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIcon}/>
-                                        <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                                    </View>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-
-                    </View>
-                </TouchableOpacity>
-            </Modal>
         </View>
     );
 }
-
-
-
 
 const styles = StyleSheet.create({
     listContainer: {

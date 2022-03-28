@@ -11,6 +11,8 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import { strings } from "../../../../App";
 import NetInfo from "@react-native-community/netinfo";
 import { constants } from "../../../03-constants/Constants";
+import { ModalConnection } from "../../02-components/ConnectionComponent";
+import { getUser, UpdateUserProfile } from "../../03-providers/UserProvider";
 
 const MyProfilePage = ({ navigation }) => {
     let [signedUserName, setSignedUserName] = useState("");
@@ -131,13 +133,7 @@ const MyProfilePage = ({ navigation }) => {
 
     /** call backend api to get the user signed profile */
     const getUserProfile = (idToken) => {
-        fetch(constants.apiIP + "userProfile/getUserProfile", {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                "Authorization": "Bearer " + idToken
-            },
-        })
+        getUser(idToken)
             .then((response) => response.json())
             .then((responseJson) => storeUserProfile(responseJson))
             .catch((error)=>{console.log(error)})
@@ -200,14 +196,7 @@ const MyProfilePage = ({ navigation }) => {
                             data.append('birthday', signedUserbirthday)
                             data.append('phone', signedPhoneNumber + "")
                             data.append('email', signedUserEmail)
-                            fetch(constants.apiIP + "userProfile/updateUserProfile", {
-                                method: 'post',
-                                body: data,
-                                headers: {
-                                    "Content-Type": "multipart/form-data",
-                                    "Authorization": "Bearer " + currentToken
-                                },
-                            })
+                            UpdateUserProfile(currentToken, data)
                                 .then((response) => response.json())
                                 .then((responseJson) => console.log(responseJson))
                                 .then(this.toast.show(yourProfilehasSuccesfullyUpdated, 2000), setLoading(false))
@@ -253,13 +242,11 @@ const MyProfilePage = ({ navigation }) => {
         });
     }
 
-
     useEffect(() => {
         checkConnection();
         return () => {
         }
     }, [])
-
 
     return (
         <View style={globalStyles.JournalDetails_main_Container}>
@@ -289,7 +276,7 @@ const MyProfilePage = ({ navigation }) => {
                     </View>
 
                     <View style={globalStyles.menuDrawer_Overflow_Div}>
-                        <ScrollView style={{ width: '100%', height: '100%' }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='always'>
+                        <ScrollView style={globalStyles.viewWidthHeigth100} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='always'>
 
                             <View style={{ height: '100%', alignItems: 'center' }}>
                                 <TouchableOpacity activeOpacity={0.8} onPress={() => openGallery()}>
@@ -363,28 +350,8 @@ const MyProfilePage = ({ navigation }) => {
                     </View>
                 </View>
             </KeyboardAwareScrollView>
+            <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
 
-            <Modal transparent={true} visible={connectionModalStatus}>
-                <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-                    <View style={globalStyles.modalDivstyle}>
-                        <View style={globalStyles.modalSubDivstyle}>
-                            <View style={globalStyles.modalSubDivstyle2}>
-                                <View style={globalStyles.modalSubDivstyle3}>
-                                    <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../../assets/no-internet.png')} style={globalStyles.noInternetIcon}/>
-                                        <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                                    </View>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
             <Toast ref={(toast) => this.toast = toast}
                 style={{ borderRadius: 20 }}
                 fadeInDuration={500}

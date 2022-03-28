@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, SafeAreaView, StyleSheet, Image, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, TextInput } from "react-native";
+import { View, Text, Image, TouchableOpacity, Modal } from "react-native";
 import FastImage from "react-native-fast-image";
 import { globalStyles } from '../../03-constants/global';
 import { constants } from "../../03-constants/Constants";

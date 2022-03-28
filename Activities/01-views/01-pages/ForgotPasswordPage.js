@@ -6,6 +6,7 @@ import auth, { firebase } from '@react-native-firebase/auth';
 import { globalStyles } from "../../../Activities/03-constants/global";
 import NetInfo from "@react-native-community/netinfo";
 import { strings } from "../../../App";
+import { NoInternetConnection } from "../02-components/ConnectionComponent";
 
 const ForgotPasswordPage = ({ navigation }) => {
 
@@ -19,7 +20,7 @@ const ForgotPasswordPage = ({ navigation }) => {
     let [noInternetConnection, setNoInternetConnection] = useState("No Internet connection");
     let [refresh, setRefresh] = useState("Refresh");
     let [checkyourconnectionthenrefreshthepage, setCheckyourconnectionthenrefreshthepage] = useState("Check your connection, then refresh the page");
-    
+
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {
@@ -79,12 +80,12 @@ const ForgotPasswordPage = ({ navigation }) => {
                     <KeyboardAwareScrollView showsVerticalScrollIndicator={false} style={globalStyles.viewFlex1}>
                         <View style={{ height: '10%' }}>
                             <TouchableOpacity onPress={() => navigation.navigate("WelcomePage")}>
-                                <Image source={require('../../assets/left-arrow.png')} style={{ width: 30, height: 30, marginTop: 20 }}/>
+                                <Image source={require('../../assets/left-arrow.png')} style={{ width: 30, height: 30, marginTop: 20 }} />
                             </TouchableOpacity>
                         </View>
 
                         <View style={{ height: '90%', alignItems: 'center' }}>
-                            <Image source={require('../../assets/resetPassword.png')} style={globalStyles.image_ResetPassword}/>
+                            <Image source={require('../../assets/resetPassword.png')} style={globalStyles.image_ResetPassword} />
 
                             <Text style={{ marginTop: 100, fontWeight: 'bold', fontSize: 18 }}>{resetPassword}</Text>
                             <Text style={{ color: 'grey', marginTop: 5, fontSize: 11 }}>{enterAnEmailAddressYouUsetoSignIn}</Text>
@@ -114,18 +115,7 @@ const ForgotPasswordPage = ({ navigation }) => {
 
                 </SafeAreaView>
             ) :
-                <SafeAreaView style={{ flex: 1, backgroundColor: 'white', width: '100%' }}>
-                    <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
-                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIconwidth60}/>
-                        <Text style={globalStyles.blackBoldLabel}>{noInternetConnection}</Text>
-                        <Text style={globalStyles.textColorGrey}>{checkyourconnectionthenrefreshthepage}</Text>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                            <View style={globalStyles.resetPassword_button}>
-                                <Text style={globalStyles.Wel_Log_buttonLabel}>{refresh}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
+                <NoInternetConnection noInternetConnection={noInternetConnection} checkyourconnection={checkyourconnectionthenrefreshthepage} checkConnection={checkConnection} refresh={refresh} />
             }
         </View>
     );

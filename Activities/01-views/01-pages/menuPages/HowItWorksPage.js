@@ -20,7 +20,6 @@ const HowItWorksPage = ({ navigation }) => {
     let [a5Size, seta5Size] = useState("A5 size");
     let [lastPageContainingAllContr, setLastPageContainingAllContr] = useState("Last page containing all contributors");
 
-
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {

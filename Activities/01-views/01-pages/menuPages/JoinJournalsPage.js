@@ -6,7 +6,8 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { strings } from "../../../../App";
 import NetInfo from "@react-native-community/netinfo";
-import { constants } from "../../../03-constants/Constants";
+import { ModalConnection } from "../../02-components/ConnectionComponent";
+import { UpdateSharedKey } from "../../03-providers/JournalProvider";
 
 const JoinJournalsPage = ({ navigation }) => {
 
@@ -46,17 +47,7 @@ const JoinJournalsPage = ({ navigation }) => {
                 Keyboard.dismiss()
                 if (sharedKey.length === 6) {
                     setLoading(true)
-                    fetch(constants.apiIP + "journal/updateSharedKeyAfterJoin", {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            "Authorization": "Bearer " + currentToken
-                        },
-                        body: JSON.stringify({
-                            pinCode: sharedKey
-                        })
-                    })
+                    UpdateSharedKey(currentToken, sharedKey)
                         .then((response) => response.json())
                         .then((responseJson) => console.log(responseJson))
                         .then(whenKeyUpdatedSuccessfully())
@@ -174,29 +165,7 @@ const JoinJournalsPage = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-
-            <Modal transparent={true} visible={connectionModalStatus}>
-                <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-                    <View style={globalStyles.modalDivstyle}>
-                        <View style={globalStyles.modalSubDivstyle}>
-                            <View style={globalStyles.modalSubDivstyle2}>
-                                <View style={globalStyles.modalSubDivstyle3}>
-                                    <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../../assets/no-internet.png')} style={globalStyles.noInternetIcon}/>
-                                        <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                                    </View>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+            <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
 
             <Toast ref={(toast) => this.toast = toast}
                 style={{ borderRadius: 20 }}

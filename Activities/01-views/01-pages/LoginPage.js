@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import auth, { firebase } from '@react-native-firebase/auth';
 import NetInfo from "@react-native-community/netinfo";
 import { strings } from "../../../App";
+import { NoInternetConnection } from "../02-components/ConnectionComponent";
 
 
 const LoginPage = ({ route, navigation }) => {
@@ -92,9 +93,7 @@ const LoginPage = ({ route, navigation }) => {
         }
     }
 
-    /**
-       *  function to check if internet connection is enable or not
-       */
+    /** function to check if internet connection is enable or not */
     const checkConnection = () => {
         NetInfo.fetch().then(state => {
             if (state.isConnected == true) {
@@ -112,7 +111,6 @@ const LoginPage = ({ route, navigation }) => {
         return () => {
         }
     }, [])
-
 
 
     return (
@@ -151,8 +149,6 @@ const LoginPage = ({ route, navigation }) => {
 
                             <View style={globalStyles.viewLoginButton}>
                                 <TouchableOpacity activeOpacity={0.8} onPress={() => loginFunction()}>
-                                    {/* <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.replace('HomePage')}> */}
-
                                     <View style={globalStyles.Welc_Log_button}>
                                         <Text style={globalStyles.Wel_Log_buttonLabel}>{login}</Text>
                                     </View>
@@ -174,18 +170,8 @@ const LoginPage = ({ route, navigation }) => {
                     </View>
                 </View>
             ) :
-                <SafeAreaView style={{ flex: 1, backgroundColor: 'white', width: '100%' }}>
-                    <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
-                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIconwidth60}/>
-                        <Text style={globalStyles.blackBoldLabel}>{noInternetConnection}</Text>
-                        <Text style={globalStyles.textColorGrey}>{checkyourconnectionthenrefreshthepage}</Text>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                            <View style={globalStyles.resetPassword_button}>
-                                <Text style={globalStyles.Wel_Log_buttonLabel}>{refresh}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
+                <NoInternetConnection noInternetConnection={noInternetConnection} checkyourconnection={checkyourconnectionthenrefreshthepage} checkConnection={checkConnection} refresh={refresh} />
+
             }
             <Toast ref={(ref) => Toast.setRef(ref)} />
         </View>

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, Image, FlatList, TouchableOpacity, Modal, TouchableWithoutFeedback, BackHandler, TextInput, ImageBackground } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Image, FlatList, TouchableOpacity, Modal, BackHandler, TextInput } from "react-native";
 import auth, { firebase } from '@react-native-firebase/auth';
 import { globalStyles } from "../../../Activities/03-constants/global";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from 'react-native-loading-spinner-overlay';
 import { strings } from "../../../App";
-import { constants } from "../../03-constants/Constants";
 import NetInfo from "@react-native-community/netinfo";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { useIsFocused } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
-import { Greeting } from "../../03-constants/Interceptor";
+import { ListCoverImageBackgroundComponent, ListDefaultImageBackgroundComponent, ContributorsDaysLeftComponent, NoJournalsComponent, ToggleCategoriesComponent, DrawerComponent } from "../02-components/HomePageComponent";
+import { NoInternetConnection } from "../02-components/ConnectionComponent";
+import { ModalConnection } from "../02-components/ConnectionComponent";
+import { getUser } from "../03-providers/UserProvider";
+import { CreateJournal, InvitedJournalEditionsCall, JournalContributorsCall, JournalEditionsCall, UserInvitedJournals, UserJournals } from "../03-providers/JournalProvider";
 
 const HomePage = ({ navigation }) => {
 
@@ -143,24 +146,13 @@ const HomePage = ({ navigation }) => {
                     setModalStatus(false)
                     myJournalsList.push({ journalName: journalName })
 
-                    fetch(constants.apiIP + "journal/create", {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            "Authorization": "Bearer " + currentToken
-                        },
-                        body: JSON.stringify({
-                            name: journalName
-                        })
-                    })
+                    CreateJournal(currentToken,journalName)
                         .then((response) => response.json())
                         .then((responseJson) => getAllJournalsByUser(currentToken))
-                        .catch((error) => { console.log("7 ", error) })
+                        .catch((error) => { alert("Something went wrong"), setLoading(false) })
                 } else {
                     this.toast.show(pleasetypeavalidjournalname, 2000)
                 }
-
             } else {
                 setConnectionModalStatus(true)
             }
@@ -169,16 +161,10 @@ const HomePage = ({ navigation }) => {
 
     /** call backend api to get the user signed profile */
     const getUserProfile = (idToken) => {
-        fetch(constants.apiIP + "userProfile/getUserProfile", {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                "Authorization": "Bearer " + idToken
-            },
-        })
+        getUser(idToken)
             .then((response) => response.json())
             .then((responseJson) => saveUserUid(responseJson))
-            .catch((error) => { console.log("6 ", error) })
+            .catch((error) => { console.log(error) })
     };
 
     const saveUserUid = (responseJson) => {
@@ -189,17 +175,7 @@ const HomePage = ({ navigation }) => {
     /** call backend api to get all journals for the current user signed in */
     const getAllJournalsByUser = (idToken) => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/getAllJournals", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                "Authorization": "Bearer " + idToken
-            },
-            body: JSON.stringify({
-                name: ""
-            })
-        })
+        UserJournals(idToken)
             .then((response) => response.json())
             .then((responseJson) => saveDataList(0, responseJson, idToken))
             .catch((error) => { console.log(error) })
@@ -208,16 +184,10 @@ const HomePage = ({ navigation }) => {
     /** call backend api to get all the invitednjournals for the current user signed in */
     const getAllInvitedJournalsbyUserUID = () => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/getInvitedJournalsByUserUid", {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                "Authorization": "Bearer " + currentToken
-            },
-        })
+        UserInvitedJournals(currentToken)
             .then((response) => response.json())
             .then((responseJson) => saveDataList(1, responseJson, currentToken))
-            .catch((error) => { console.log("4 ", error) })
+            .catch((error) => { console.log(error) })
     };
 
     /** function to store data from db into a current list */
@@ -253,20 +223,11 @@ const HomePage = ({ navigation }) => {
                 setLoading(true)
                 setJournalIndexSelected(index)
                 getUserProfile(currentToken)
-                fetch(constants.apiIP + "journal/getJournalEditions", {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        "Authorization": "Bearer " + idToken
-                    },
-                    body: JSON.stringify({
-                        name: journalName
-                    })
-                })
+
+                JournalEditionsCall(idToken,journalName)
                     .then((response) => response.json())
                     .then((responseJson) => storeDataIntoList(responseJson))
-                    .catch((error) => { console.log("1 ", error) })
+                    .catch((error) => { console.log(error) })
             } else {
                 setConnectionModalStatus(true)
             }
@@ -281,20 +242,11 @@ const HomePage = ({ navigation }) => {
                 setLoading(true)
                 setJournalIndexSelected(index)
                 setSignedUserUid(ownerUID)
-                fetch(constants.apiIP + "journal/getJournalEditionsToInvitedJournal", {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userUid: ownerUID,
-                        journalName: journalName
-                    })
-                })
+             
+                InvitedJournalEditionsCall(ownerUID, journalName)
                     .then((response) => response.json())
                     .then((responseJson) => storeDataIntoList(responseJson))
-                    .catch((error) => { console.log("2 ", error) })
+                    .catch((error) => { console.log(error) })
             } else {
                 setConnectionModalStatus(true)
             }
@@ -303,19 +255,10 @@ const HomePage = ({ navigation }) => {
 
     /** insert admin and the key into DB */
     const getAllContributors = (journalRef) => {
-        fetch(constants.apiIP + "journal/getAllJournalContributors", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                journalRef: journalRef,
-            })
-        })
+        JournalContributorsCall(journalRef)
             .then((response) => response.json())
             .then((responseJson) => setContributorsNb(responseJson.length))
-            .catch((error) => { console.log("3 ", error) })
+            .catch((error) => { console.log(error) })
     }
 
     /** store parameters in the AsyncStorage */
@@ -380,17 +323,12 @@ const HomePage = ({ navigation }) => {
         }
     }
 
-    const consoleAlert = () => {
-        console.log("ping")
-    }
-
     useEffect(() => {
         checkConnection(0)
         BackHandler.addEventListener("hardwareBackPress", backAction);
         return () =>
             BackHandler.removeEventListener("hardwareBackPress", backAction);
     }, []);
-
 
     /** render for the subJournals horizontal flatlist Items */
     const _renderItemCategorieJournals = ({ item, index }) => {
@@ -402,7 +340,6 @@ const HomePage = ({ navigation }) => {
             </View>
         )
     }
-
 
     /** render to main flatfist Items  */
     const _renderItem = ({ item }) => {
@@ -445,25 +382,15 @@ const HomePage = ({ navigation }) => {
                 <View style={globalStyles.list_item}>
                     <SafeAreaView style={globalStyles.safeAreaViewFlexCenterbackgroundWhite}>
                         {item.coverImage == "null" || item.coverImage == "" ? (
-                            <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground} source={require('../../assets/defaultCover.jpg')} >
-                                <View style={globalStyles.monthYearView}>
-                                    <Text style={globalStyles.monthYearLabel}>{month} {year}</Text>
-                                </View>
-                            </ImageBackground>
+                            <ListDefaultImageBackgroundComponent month={month} year={year} />
                         ) :
-                            <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground}
-                                source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + signedUserUid + "/" + item.coverImage }} >
-                                <View style={globalStyles.monthYearView}>
-                                    <Text style={globalStyles.monthYearLabel}>{month} {year}</Text>
-                                </View>
-                            </ImageBackground>
+                            <ListCoverImageBackgroundComponent signedUserUid={signedUserUid} coverImage={item.coverImage} month={month} year={year} />
                         }
                     </SafeAreaView>
                 </View>
             </TouchableOpacity>
         );
     };
-
 
     return (
         <View style={globalStyles.main_Container}>
@@ -474,32 +401,8 @@ const HomePage = ({ navigation }) => {
             />
             {isConnectedToInternet == true ? (
                 <SafeAreaView style={globalStyles.flexWithBackgroundWhite}>
-
-                    <View style={globalStyles.home_header_div}>
-                        <View style={globalStyles.home_header_row_div}>
-                            <TouchableWithoutFeedback onPress={() => navigation.openDrawer()}>
-                                <View style={{ padding: 7, width: 45 }}>
-                                    <Image source={require('../../assets/home_menu_icon.png')} style={globalStyles.home_menu_logo} />
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.home_famulous_logo} />
-                            <TouchableOpacity activeOpacity={0.8} style={{ marginRight: 10 }} onPress={() => setModalStatus(true)}>
-                                <Image source={require('../../assets/home_plus_icon.png')} style={globalStyles.home_plus_logo} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={globalStyles.viewFlexRowSpaceBetweenfullWidth}>
-                        <TouchableOpacity activeOpacity={1} onPress={() => toggleJournalsCategorie(0)}>
-                            <View style={globalStyles.homepage_categoriesButton}>
-                                <Text style={myJournalCategorie_Status ? globalStyles.homePage_categoriesLabelBtn : globalStyles.homePage_categoriesLabelBtnDisable}>{myJournals}</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={1} onPress={() => toggleJournalsCategorie(1)}>
-                            <View style={globalStyles.homepage_categoriesButton}>
-                                <Text style={otherJournalCategorie_Status ? globalStyles.homePage_categoriesLabelBtn : globalStyles.homePage_categoriesLabelBtnDisable}>{otherJournals}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                    <DrawerComponent modalTrue={() => setModalStatus(true)} openDrawer={() => navigation.openDrawer()} />
+                    <ToggleCategoriesComponent toggleJournalsCategorie0={() => toggleJournalsCategorie(0)} toggleJournalsCategorie1={() => toggleJournalsCategorie(1)} myJournals={myJournals} otherJournals={otherJournals} isVisibleMyJournals={myJournalCategorie_Status} isVisibleOthers={otherJournalCategorie_Status} />
 
                     <View style={globalStyles.viewHorizontalListJouranal}>
                         {myJournalsList.length != 0 ? (
@@ -509,51 +412,25 @@ const HomePage = ({ navigation }) => {
                     </View>
 
                     {myJournalsList.length != 0 ? (
-
-                        <View style={globalStyles.row_div_homePage_contributorsDaysLeft}>
-                            <View style={globalStyles.row_div_homePage_singleView_DaysLeft_Contributors}>
-                                <Image source={require('../../assets/group.png')} style={{ width: 18, height: 18, marginRight: 5, marginLeft: 5 }} />
-                                <Text style={globalStyles.home_listItem_Contributors_Days}>{contributorsNb} {contributorss}</Text>
-                            </View>
-                            {accessStatus === 0 ? (
-                                <View style={globalStyles.row_div_homePage_singleView_DaysLeft_Contributors}>
-                                    <Text style={globalStyles.home_listitem_bulletpoint}>•</Text>
-                                    <Image source={require('../../assets/clock.png')} style={{ width: 18, height: 18, marginRight: 5 }} />
-                                    <Text style={globalStyles.home_listItem_Contributors_Days}>{daysLeftFromDB} {daysLeft}</Text>
-                                </View>
-                            ) : null}
-                        </View>
+                        <ContributorsDaysLeftComponent contributorsNb={contributorsNb} contributorss={contributorss} accessStatus={accessStatus} daysLeftFromDB={daysLeftFromDB} daysLeft={daysLeft} />
                     ) :
                         <View style={globalStyles.row_div_homePage_contributorsDaysLeft}>
                         </View>
                     }
+
                     <View style={globalStyles.home_list_div}>
                         <SafeAreaView style={globalStyles.viewFlex1}>
                             {myJournalsList.length != 0 ? (
                                 <FlatList showsVerticalScrollIndicator={false} data={journalEditionsList} renderItem={_renderItem} />
                             ) :
-                                <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
-                                    <Image source={require('../../assets/emptyJournal.png')} style={globalStyles.noInternetIconwidth60} />
-                                    <Text style={globalStyles.blackBoldLabel}>{youhavenojournalsatthismoment}</Text>
-                                    <Text style={globalStyles.textColorGrey}>{addJournalswiththeplusButton}</Text>
-                                </View>
+                                <NoJournalsComponent noJournals={youhavenojournalsatthismoment} addWithBtn={addJournalswiththeplusButton} />
                             }
                         </SafeAreaView>
                     </View>
+
                 </SafeAreaView>
             ) :
-                <SafeAreaView style={globalStyles.flexWithBackgroundWhite}>
-                    <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
-                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIconwidth60} />
-                        <Text style={globalStyles.blackBoldLabel}>{noInternetConnection}</Text>
-                        <Text style={globalStyles.textColorGrey}>{checkyourconnectionthenrefreshthepage}</Text>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection(0)}>
-                            <View style={globalStyles.resetPassword_button}>
-                                <Text style={globalStyles.Wel_Log_buttonLabel}>{refresh}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
+                <NoInternetConnection noInternetConnection={noInternetConnection} checkyourconnection={checkyourconnectionthenrefreshthepage} checkConnection={() => checkConnection(0)} refresh={refresh} />
             }
 
             <Modal transparent={true} visible={modalStatus}>
@@ -580,27 +457,7 @@ const HomePage = ({ navigation }) => {
                 <Toast ref={(toast) => this.toast = toast} />
             </Modal>
 
-            <Modal transparent={true} visible={connectionModalStatus}>
-                <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-                    <View style={globalStyles.modalDivstyle}>
-                        <View style={globalStyles.modalSubDivstyle}>
-                            <View style={globalStyles.modalSubDivstyle2}>
-                                <View style={globalStyles.modalSubDivstyle3}>
-                                    <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIcon} />
-                                        <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                                    </View>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection(1)}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+            <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={() => checkConnection(1)} refresh={refresh} />
 
         </View>
     );

@@ -9,9 +9,10 @@ import { globalStyles } from "../../../Activities/03-constants/global";
 import DatePicker from 'react-native-datepicker'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { strings } from "../../../App";
-import { constants } from "../../03-constants/Constants";
 import NetInfo from "@react-native-community/netinfo";
 import ImagePicker from "react-native-image-crop-picker";
+import { NoInternetConnection } from "../02-components/ConnectionComponent";
+import { createUserProfile, checkEmailVerification } from "../03-providers/UserProvider";
 
 const CreateAccountPage = ({ route, navigation }) => {
     let [name, setName] = useState('')
@@ -81,7 +82,6 @@ const CreateAccountPage = ({ route, navigation }) => {
         }
     }
 
-
     /** function check if all require fields exists then call backend api "callApiIfUserVerified()" to check if email is verified */
     const submitFunction = () => {
         if (emailCondition === 0 || email == '') {
@@ -126,19 +126,10 @@ const CreateAccountPage = ({ route, navigation }) => {
 
     /**  Function call backend Api to check if email is verified */
     const callApiIfUserVerified = () => {
-        fetch(constants.apiIP + "signUp/check", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email
-            })
-        })
+        checkEmailVerification(email)
             .then((response) => response.json())
             .then((responseJson) => checkUserIfVerified(responseJson))
-            .catch((error)=>{console.log(error)})
+            .catch((error) => { console.log(error) })
     }
 
     /**
@@ -183,7 +174,6 @@ const CreateAccountPage = ({ route, navigation }) => {
         }
     }
 
-
     /**
      * finalizeFunction() check if user verified with Firebase
      * if verified then call uploadProfile() function, Login and navigate to the HomePage 
@@ -222,17 +212,10 @@ const CreateAccountPage = ({ route, navigation }) => {
         data.append('phone', formattedValue)
         data.append('email', email)
 
-        fetch(constants.apiIP + "userProfile/create", {
-            method: 'post',
-            body: data,
-            headers: {
-                "Content-Type": "multipart/form-data",
-                "Authorization": "Bearer " + currentToken
-            },
-        })
+        createUserProfile(currentToken, data)
             .then((response) => response.json())
             .then((responseJson) => console.log(responseJson))
-            .catch((error)=>{console.log(error)})
+            .catch((error) => { console.log(error) })
     }
 
     /** function to open the mobile gallery and pick an image */
@@ -328,16 +311,14 @@ const CreateAccountPage = ({ route, navigation }) => {
                         </View>
 
                         <View style={globalStyles.Login_Midle_div}>
-
                             <View style={{ flex: 1, width: '100%' }}>
-
                                 <View>
                                     <Text style={{ color: 'grey', marginLeft: 25, marginTop: 20, fontSize: 12 }}>{nameLabel}</Text>
                                     <View style={globalStyles.login_InputwithImage}>
                                         <TextInput style={globalStyles.textInputWithIcon} underlineColorAndroid="transparent" onChangeText={(text) => setName(text)} />
                                         {nameWarning ?
                                             (
-                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon}/>) : null}
+                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon} />) : null}
                                     </View>
                                 </View>
 
@@ -396,7 +377,7 @@ const CreateAccountPage = ({ route, navigation }) => {
                                         />
                                         {phonenumberWarning ?
                                             (
-                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon_Phone}/>) : null}
+                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon_Phone} />) : null}
                                     </View>
                                 </View>
 
@@ -411,7 +392,7 @@ const CreateAccountPage = ({ route, navigation }) => {
                                         <TextInput style={globalStyles.textInputWithIcon} underlineColorAndroid="transparent" onChangeText={(text) => validate(text)} />
                                         {emailWarning ?
                                             (
-                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon} secureTextEntry={false}/>) : null}
+                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon} secureTextEntry={false} />) : null}
                                     </View>
                                 </View>
 
@@ -425,7 +406,7 @@ const CreateAccountPage = ({ route, navigation }) => {
                                     <View style={globalStyles.login_InputwithImage}>
                                         <TextInput style={globalStyles.textInputWithIcon} secureTextEntry={securityText} underlineColorAndroid="transparent" onChangeText={(text) => setPassword(text)} />
                                         <TouchableOpacity onPress={() => toggleshowPasswordIcon()} style={{ justifyContent: 'center', flex: 1 }}>
-                                            <Image source={showHidePasswordIcon} style={globalStyles.login_password_showHidePass}/>
+                                            <Image source={showHidePasswordIcon} style={globalStyles.login_password_showHidePass} />
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -436,7 +417,7 @@ const CreateAccountPage = ({ route, navigation }) => {
                                         <TextInput style={globalStyles.textInputWithIcon} underlineColorAndroid="transparent" onChangeText={(text) => setConfirmPassword(text)} />
                                         {confirmpasswordWarning ?
                                             (
-                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon}/>) : null}
+                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon} />) : null}
                                     </View>
                                 </View>
 
@@ -463,18 +444,8 @@ const CreateAccountPage = ({ route, navigation }) => {
                     </KeyboardAwareScrollView>
                 </View>
             ) :
-                <SafeAreaView style={{ flex: 1, backgroundColor: 'white', width: '100%' }}>
-                    <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
-                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIconwidth60}/>
-                        <Text style={globalStyles.blackBoldLabel}>{noInternetConnection}</Text>
-                        <Text style={globalStyles.textColorGrey}>{checkyourconnectionthenrefreshthepage}</Text>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                            <View style={globalStyles.resetPassword_button}>
-                                <Text style={globalStyles.Wel_Log_buttonLabel}>{refresh}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
+                <NoInternetConnection noInternetConnection={noInternetConnection} checkyourconnection={checkyourconnectionthenrefreshthepage} checkConnection={checkConnection} refresh={refresh} />
+
             }
         </View>
 

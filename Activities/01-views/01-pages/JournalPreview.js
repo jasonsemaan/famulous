@@ -8,7 +8,12 @@ import auth, { firebase } from '@react-native-firebase/auth';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import NetInfo from "@react-native-community/netinfo";
 import { strings } from "../../../App";
-import { PortraitDescComponent } from "../02-components/JournalPreviewComponent";
+import { PortraitDescComponentTop, LandscapeDescComponentTop, LandscapeNoDescComponentTop, PortraitDescComponentBottom, LandscapeDescComponentBottom, LandscapeNoDescComponentBottom,
+ PortraitFullNoDescComponent, PortraitFullDescComponent, ImageBackgroundDefault, ImageBackgroundCover, SinglePageFooterComponent, PreviewFooterListItem} from "../02-components/JournalPreviewComponent";
+import { ModalConnection } from "../02-components/ConnectionComponent";
+import { EditionImagesCall } from "../03-providers/ImagesProvider";
+import { GeneratePDF } from "../03-providers/JournalProvider";
+import { GetEditionEvents } from "../03-providers/EventsProvider";
 
 const JournalPreview = ({ route, navigation }) => {
     var admin = route.params.adminName;
@@ -40,17 +45,7 @@ const JournalPreview = ({ route, navigation }) => {
     /** call backend api to get all journal edition images from db */
     let getAllJournalEditionImages = (token, editionRef) => {
         setLoading(true)
-        fetch(constants.apiIP + "journal/selectEditionImages", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({
-                editionRef: editionRef
-            })
-        })
+        EditionImagesCall(token, editionRef)
             .then((response) => response.json())
             .then((responseJson) => storeImagesList(responseJson))
             .catch((error)=>{console.log(error)})
@@ -67,19 +62,7 @@ const JournalPreview = ({ route, navigation }) => {
         NetInfo.fetch().then(state => {
             if (state.isConnected == true) {
                 setLoading(true)
-                fetch(constants.apiIP + "pdfGenerator/generate", {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        "Authorization": "Bearer " + currentToken
-                    },
-                    body: JSON.stringify({
-                        editionRef: global.EditionRef,
-                        journalName: global.JournalName,
-                        lang: currentLanguage
-                    })
-                })
+                GeneratePDF(currentToken, global.EditionRef, global.JournalName, currentLanguage)
                     .then((response) => response.json())
                     .then((responseJson) => pdfCreated(responseJson))
                     .catch((error)=>{console.log(error)})
@@ -162,264 +145,34 @@ const JournalPreview = ({ route, navigation }) => {
                 {frameId.substring(0, 1) === "S" ? (
                     <View>
                         {item.famImgStoreEntity1.IMG_ORIENTATION === "PORTRAIT" ? (
-                            <PortraitDescComponent contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate1={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION}/>
+                            <PortraitDescComponentTop contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION}/>
                         ) : item.famImgStoreEntity1.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity1.IMG_DESCRIPTION_VISIBLE === 1 ? (
-                            <View style={globalStyles.journal_upload_item_view_landscape_50pourcent_withoutborder}>
-                                <View style={globalStyles.landscape_width50}>
-                                    <View style={globalStyles.landscape_width100_preview}>
-                                        <FastImage
-                                            style={{ width: '100%', height: '70%' }}
-                                            source={{
-                                                uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.IMG_PATH,
-                                            }}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />
-                                    </View>
-                                    <View style={globalStyles.landscape_rightView}>
-                                        <View style={globalStyles.landscape_closeView}>
-                                        </View>
-                                        <View style={{ marginTop: 40 }}>
-                                            <FastImage
-                                                style={globalStyles.imageRounded40}
-                                                source={{
-                                                    uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
-                                                }}
-                                                resizeMode={FastImage.resizeMode.cover}
-                                            />
-                                        </View>
-                                        <View style={{ marginTop: 15, alignSelf: 'center' }}>
-                                            <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity1.USER_NAME}</Text>
-                                            <Text style={globalStyles.journal_text_styles_date_preview}>{formattedDate1}</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View style={globalStyles.landscape_description_preview}>
-                                    <Text style={globalStyles.journal_text_styles_description_grey}>{item.famImgStoreEntity1.IMG_DESCRIPTION}</Text>
-                                </View>
-                            </View>
+                            <LandscapeDescComponentTop contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION}/>
                         ) : item.famImgStoreEntity1.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity1.IMG_DESCRIPTION_VISIBLE === 0 ? (
-                            <View style={globalStyles.journal_upload_item_view_landscape_50pourcent_withoutborder}>
-                                <View style={globalStyles.landscape_width50_column_withoutDesc}>
-                                    <View style={globalStyles.landscape_width100_preview_withoutDesc}>
-                                        <FastImage
-                                            style={{ width: '100%', height: '85%' }}
-                                            source={{
-                                                uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.IMG_PATH,
-                                            }}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />
-                                    </View>
-
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', bottom: 45 }}>
-                                    <View>
-                                        <FastImage
-                                            style={globalStyles.imageRounded40}
-                                            source={{
-                                                uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
-                                            }}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />
-                                    </View>
-                                    <View style={globalStyles.titlesMarginLeft10}>
-                                        <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity1.USER_NAME}</Text>
-                                    </View>
-                                    <View style={globalStyles.titlesMarginLeft15}>
-                                        <Text style={globalStyles.journal_text_styles_date_preview_fullScreen}>{formattedDate1}</Text>
-                                    </View>
-                                </View>
-                            </View>
+                            <LandscapeNoDescComponentTop contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1}/>
                         ) : null
                         }
-
-
-
                         {item.famImgStoreEntity2 != null ? (
                             <View>
                                 {item.famImgStoreEntity2.IMG_ORIENTATION === "PORTRAIT" ? (
-                                    <View style={globalStyles.journal_upload_item_view_portrait_50pourcent_withoutborder}>
-                                        <View style={globalStyles.portrait_width50}>
-                                            <View style={globalStyles.portrait_width100_preview}>
-                                                <FastImage
-                                                    style={{ width: '100%', height: 230, top: 70 }}
-                                                    source={{
-                                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.IMG_PATH,
-                                                    }}
-                                                    resizeMode={FastImage.resizeMode.cover}
-                                                />
-                                            </View>
-                                        </View>
-                                        <View style={globalStyles.portrait_2ndView50}>
-                                            <View style={globalStyles.portrait_closeView}>
-                                            </View>
-                                            <View>
-                                                <FastImage
-                                                    style={globalStyles.imageRounded40}
-                                                    source={{
-                                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.PROFILE_PHOTO_PATH,
-                                                    }}
-                                                    resizeMode={FastImage.resizeMode.cover}
-                                                />
-                                            </View>
-                                            <View style={{ marginTop: 15 }}>
-                                                <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity2.USER_NAME}</Text>
-                                                <Text style={globalStyles.journal_text_styles_date_preview}>{formattedDate2}</Text>
-                                            </View>
-                                            <View style={globalStyles.portrait_description}>
-                                                <Text style={globalStyles.journal_text_styles_description_grey}>{item.famImgStoreEntity2.IMG_DESCRIPTION}</Text>
-                                            </View>
-                                        </View>
-                                    </View>
+                                    <PortraitDescComponentBottom contributorUID={item.famImgStoreEntity2.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity2.IMG_PATH} profilePhotoPath={item.famImgStoreEntity2.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity2.USER_NAME} formattedDate={formattedDate2} imgDescription={item.famImgStoreEntity2.IMG_DESCRIPTION}/>
                                 ) : item.famImgStoreEntity2.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity2.IMG_DESCRIPTION_VISIBLE === 1 ? (
-                                    <View style={globalStyles.journal_upload_item_view_landscape_50pourcent_withoutborder}>
-                                        <View style={globalStyles.landscape_width50}>
-                                            <View style={globalStyles.landscape_width100_preview}>
-                                                <FastImage
-                                                    style={{ width: '100%', height: '70%', marginTop: 10 }}
-                                                    source={{
-                                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.IMG_PATH,
-                                                    }}
-                                                    resizeMode={FastImage.resizeMode.cover}
-                                                />
-                                            </View>
-                                            <View style={globalStyles.landscape_rightView}>
-                                                <View style={globalStyles.landscape_closeView}>
-                                                </View>
-                                                <View style={{ marginTop: 40 }}>
-                                                    <FastImage
-                                                        style={globalStyles.imageRounded40}
-                                                        source={{
-                                                            uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.PROFILE_PHOTO_PATH,
-                                                        }}
-                                                        resizeMode={FastImage.resizeMode.cover}
-                                                    />
-                                                </View>
-                                                <View style={{ marginTop: 15, alignSelf: 'center' }}>
-                                                    <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity2.USER_NAME}</Text>
-                                                    <Text style={globalStyles.journal_text_styles_date_preview}>{formattedDate2}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <View style={globalStyles.landscape_description_preview}>
-                                            <Text style={globalStyles.journal_text_styles_description_grey}>{item.famImgStoreEntity2.IMG_DESCRIPTION}</Text>
-                                        </View>
-                                    </View>
+                                    <LandscapeDescComponentBottom contributorUID={item.famImgStoreEntity2.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity2.IMG_PATH} profilePhotoPath={item.famImgStoreEntity2.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity2.USER_NAME} formattedDate={formattedDate2} imgDescription={item.famImgStoreEntity2.IMG_DESCRIPTION}/>
                                 ) : item.famImgStoreEntity2.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity2.IMG_DESCRIPTION_VISIBLE === 0 ? (
-                                    <View style={globalStyles.journal_upload_item_view_landscape_50pourcent_withoutborder}>
-                                        <View style={globalStyles.landscape_width50_column_withoutDesc}>
-                                            <View style={globalStyles.landscape_width100_preview_withoutDesc}>
-                                                <FastImage
-                                                    style={{ width: '100%', height: '85%' }}
-                                                    source={{
-                                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.IMG_PATH,
-                                                    }}
-                                                    resizeMode={FastImage.resizeMode.cover}
-                                                />
-                                            </View>
-
-                                        </View>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', bottom: 45 }}>
-                                            <View>
-                                                <FastImage
-                                                    style={globalStyles.imageRounded40}
-                                                    source={{
-                                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity2.CONTRIBUTER_UID + "/" + item.famImgStoreEntity2.PROFILE_PHOTO_PATH,
-                                                    }}
-                                                    resizeMode={FastImage.resizeMode.cover}
-                                                />
-                                            </View>
-                                            <View style={globalStyles.titlesMarginLeft10}>
-                                                <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity2.USER_NAME}</Text>
-                                            </View>
-                                            <View style={globalStyles.titlesMarginLeft15}>
-                                                <Text style={globalStyles.journal_text_styles_date_preview_fullScreen}>{formattedDate1}</Text>
-                                            </View>
-                                        </View>
-                                    </View>
+                                    <LandscapeNoDescComponentBottom contributorUID={item.famImgStoreEntity2.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity2.IMG_PATH} profilePhotoPath={item.famImgStoreEntity2.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity2.USER_NAME} formattedDate={formattedDate2}/>
                                 ) : null
                                 }
                             </View>
                         ) : null
                         }
-
                     </View>
 
                 ) : frameId.substring(0, 1) === "F" && item.famImgStoreEntity1.IMG_DESCRIPTION_VISIBLE === 0 ? (
-                    <View style={{ width: '100%', height: '97%' }}>
-                        <View style={globalStyles.journal_Preview_portraitFullScreen}>
-                            <View style={{ height: 500 }}>
-                                <FastImage
-                                    style={{ width: '100%', height: '82%' }}
-                                    source={{
-                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.IMG_PATH,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: 75 }}>
-                                <View >
-                                    <FastImage
-                                        style={globalStyles.imageRounded40}
-                                        source={{
-                                            uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
-                                        }}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
-                                <View style={globalStyles.titlesMarginLeft10}>
-                                    <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity1.USER_NAME}</Text>
-                                </View>
-                                <View style={globalStyles.titlesMarginLeft10}>
-                                    <Text style={globalStyles.journal_text_styles_date_preview_fullScreen}>{formattedDate1}</Text>
-                                </View>
-                            </View>
-
-                        </View>
-                    </View>
+                    <PortraitFullNoDescComponent contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1}/>
                 ) :
-                    <View style={{ width: '100%', height: '97%' }}>
-                        <View style={globalStyles.journal_Preview_portraitFullScreen}>
-                            <View style={{ height: 500 }}>
-                                <FastImage
-                                    style={{ width: '100%', height: '75%' }}
-                                    source={{
-                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.IMG_PATH,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: 110 }}>
-                                <Text style={globalStyles.journal_text_styles_description_grey}>{item.famImgStoreEntity1.IMG_DESCRIPTION}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: 85 }}>
-                                <View>
-                                    <FastImage
-                                        style={globalStyles.imageRounded40}
-                                        source={{
-                                            uri: constants.apiIP + "download/byuser/bypath?path=" + item.famImgStoreEntity1.CONTRIBUTER_UID + "/" + item.famImgStoreEntity1.PROFILE_PHOTO_PATH,
-                                        }}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
-                                <View style={globalStyles.titlesMarginLeft10}>
-                                    <Text style={globalStyles.journal_text_styles}>{item.famImgStoreEntity1.USER_NAME}</Text>
-                                </View>
-                                <View style={globalStyles.titlesMarginLeft10}>
-                                    <Text style={globalStyles.journal_text_styles_date_preview_fullScreen}>{formattedDate1}</Text>
-                                </View>
-                            </View>
-
-                        </View>
-                    </View>
+                <PortraitFullDescComponent contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION}/>
                 }
-
-                <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15 }}>
-                    <Text style={globalStyles.purpleBoldLable}>{global.JournalName}</Text>
-                    <Text style={globalStyles.purpleBoldLable}>{index + 1}</Text>
-                    <View>
-                        <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo}/>
-                    </View>
-                </View>
+                <SinglePageFooterComponent pageNb={index + 1}/>
             </View>
         )
     };
@@ -461,37 +214,11 @@ const JournalPreview = ({ route, navigation }) => {
                     </TouchableOpacity>
                 </View>
             ) : null}
-
-            <Modal transparent={true} visible={connectionModalStatus}>
-                <TouchableOpacity activeOpacity={1} style={globalStyles.viewFlex1}>
-                    <View style={globalStyles.modalDivstyle}>
-                        <View style={globalStyles.modalSubDivstyle}>
-                            <View style={globalStyles.modalSubDivstyle2}>
-                                <View style={globalStyles.modalSubDivstyle3}>
-                                    <View style={globalStyles.viewRowAlignCenter}>
-                                        <Image source={require('../../assets/no-internet.png')} style={globalStyles.noInternetIcon}/>
-                                        <Text style={globalStyles.noInternetConnectionLabelStyle}>{noInternetConnection}</Text>
-                                    </View>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => checkConnection()}>
-                                        <View style={{ padding: 10 }}>
-                                            <Text style={globalStyles.refreshLabelStyle}>{refresh}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-
+            <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
             <Toast ref={(toast) => this.toast = toast} />
         </View>
-
     );
-
 }
-
 
 /** the first page view of the journal flatlist*/
 const JournalMainPage = () => {
@@ -509,20 +236,11 @@ const JournalMainPage = () => {
             </View>
             <View style={{ width: '100%', borderColor: 'lightgrey', borderWidth: 3, marginBottom: 50 }}>
                 {global.CoverImage == "null" ? (
-                    <ImageBackground style={globalStyles.journalPreview_MainPage_ImgBackground} source={require('../../assets/defaultCover.jpg')}>
-                        <View style={{ backgroundColor: '#5ec6ca', padding: 5, justifyContent: 'center', alignItems: 'center', width: '60%', marginTop: 'auto', top: 15, borderRadius: 5 }}>
-                            <Text style={{ color: 'white', fontWeight: 'bold' }}>{global.EditionReleaseDate}</Text>
-                        </View>
-                    </ImageBackground>
+                   <ImageBackgroundDefault />
                 ) :
-                    <ImageBackground style={globalStyles.journalPreview_MainPage_ImgBackground} source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + global.Admin + "/" + global.CoverImage }}>
-                        <View style={{ backgroundColor: '#5ec6ca', padding: 5, justifyContent: 'center', alignItems: 'center', width: '60%', marginTop: 'auto', top: 15, borderRadius: 5 }}>
-                            <Text style={{ color: 'white', fontWeight: 'bold' }}>{global.EditionReleaseDate}</Text>
-                        </View>
-                    </ImageBackground>
+                   <ImageBackgroundCover />
                 }
             </View>
-
             <View style={{ width: 250, justifyContent: 'center', alignItems: 'center', height: 50 }}>
                 <View>
                     <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo_MainPage}/>
@@ -532,12 +250,10 @@ const JournalMainPage = () => {
     )
 }
 
-
 /** the last page view of the journal flatlist */
 const JournalFooterPage = () => {
     let [contributorsList, setContributorsList] = useState([])
     let [holidaysEventsList, setHolidaysEventsList] = useState([])
-
 
     //Lables
     let [holidaysandEventsofthemonth, setHolidaysandEventsofthemonth] = useState("Holidays and Events of the month")
@@ -575,16 +291,7 @@ const JournalFooterPage = () => {
 
     /** get all events to the selected edition from DB */
     const getEditionEvents = (editionRef) => {
-        fetch(constants.apiIP + "journal/getEditionEvents", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                editionRef: editionRef,
-            })
-        })
+        GetEditionEvents(editionRef)
             .then((response) => response.json())
             .then((responseJson) => saveResponseData(responseJson))
     }
@@ -602,36 +309,10 @@ const JournalFooterPage = () => {
         }
     }, [])
 
-
-    /** function that return view of events list in the last page */
-    const renderItem_footer = ({ item }) => {
-        return (
-            <View style={{ marginTop: 10 }}>
-                <View style={globalStyles.flexRow}>
-                    <Text style={{ fontSize: 12, color: 'black', marginRight: 20 }}>{item.name}</Text>
-                    <Text style={{ fontSize: 12, color: '#5ec6ca', marginLeft: 10, marginRight: 10 }}>{item.date}</Text>
-                    <Text style={{ fontSize: 12, color: '#F25278', marginLeft: 20 }}>{item.desc}</Text>
-                </View>
-            </View>
-        )
-    }
-
-
     /** function that return view of contributors list in the last page  */
     const renderItem_Contributors_footer = ({ item }) => {
         return (
-            <View style={{ marginTop: 10, width: '50%' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
-                    <FastImage
-                        style={globalStyles.imageRounded40}
-                        source={{
-                            uri: constants.apiIP + "download/byuser/bypath?path=" + item.OWNER_UID + "/profile.jpg",
-                        }}
-                        resizeMode={FastImage.resizeMode.cover}
-                    />
-                    <Text style={{ fontSize: 10, color: 'black', marginRight: 20, marginLeft: 10 }}>{item.USER_NAME}</Text>
-                </View>
-            </View>
+            <PreviewFooterListItem ownerUid={item.OWNER_UID} UserName={item.USER_NAME}/>
         )
     }
 
@@ -672,7 +353,7 @@ const JournalFooterPage = () => {
                 </View>
             </View>
 
-            <View style={{ width: 250, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15 }}>
+            <View style={globalStyles.previewFooterPageItemListView}>
                 <Text style={globalStyles.purpleBoldLable}>{global.JournalName}</Text>
                 <Text style={globalStyles.purpleBoldLable}></Text>
                 <View>

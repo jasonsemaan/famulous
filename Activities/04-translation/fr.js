@@ -159,7 +159,7 @@ export default {
     lastPageContainingAllContr: "Dernière page contenant tous les contributeurs",
 
     //SignOut PopUp
-    areyousure: "êtes-vous sûr?",
+    areyousure: "Êtes-vous sûr?",
     cancel: "Annuler",
 
     //Welcome Page

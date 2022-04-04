@@ -52,3 +52,15 @@ export const UpdateCoverImage = (idToken, data) => fetch(constants.apiIP + "jour
       "Authorization": "Bearer " + idToken
     },
   })
+
+  export const updateImageDescription = (imageRef, newDescription) => fetch(constants.apiIP + "journal/updateimageDescription", {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        imgStoreRef: imageRef,
+        description: newDescription
+    })
+})

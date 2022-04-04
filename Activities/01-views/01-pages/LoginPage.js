@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, Modal, Alert } from "react-native";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
@@ -8,9 +8,12 @@ import auth, { firebase } from '@react-native-firebase/auth';
 import NetInfo from "@react-native-community/netinfo";
 import { strings } from "../../../App";
 import { NoInternetConnection } from "../02-components/ConnectionComponent";
-
+import { JournalContext } from "../04-context/Context";
 
 const LoginPage = ({ route, navigation }) => {
+
+    const myContext = useContext(JournalContext);
+
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
     let [confirmpasswordWarning, setConfirmpasswordWarning] = useState(false)
@@ -48,7 +51,7 @@ const LoginPage = ({ route, navigation }) => {
             auth().signInWithEmailAndPassword(email, password).then(response => {
                 if (response.user.emailVerified === true) {
                     AsyncStorage.setItem('appLanguage', 'en')
-                    global.appLanguage='en';
+                    myContext.setAppLanguage('en')
                     setConfirmpasswordWarning(false)
                     setEmailWarning(false)
                     navigation.replace('Root')

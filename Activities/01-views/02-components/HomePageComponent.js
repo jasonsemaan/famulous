@@ -5,7 +5,17 @@ import { constants } from "../../03-constants/Constants";
 
 export class ListDefaultImageBackgroundComponent extends React.Component {
     render() {
-        return <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground} source={require('../../assets/defaultCover.jpg')} >
+        return <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground} source={require('../../assets/defaultCover.jpg')}>
+            <View style={globalStyles.monthYearView}>
+                <Text style={globalStyles.monthYearLabel}>{this.props.month} {this.props.year}</Text>
+            </View>
+        </ImageBackground>
+    }
+}
+
+export class ListDefaultImageBackgroundComponentArchived extends React.Component {
+    render() {
+        return <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground} source={require('../../assets/defaultCover.jpg')} imageStyle={{opacity: 0.4}}> 
             <View style={globalStyles.monthYearView}>
                 <Text style={globalStyles.monthYearLabel}>{this.props.month} {this.props.year}</Text>
             </View>
@@ -15,12 +25,23 @@ export class ListDefaultImageBackgroundComponent extends React.Component {
 
 export class ListCoverImageBackgroundComponent extends React.Component {
     render() {
-        return <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground}
+        return <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground} 
             source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + this.props.signedUserUid + "/" + this.props.coverImage }} >
             <View style={globalStyles.monthYearView}>
                 <Text style={globalStyles.monthYearLabel}>{this.props.month} {this.props.year}</Text>
             </View>
         </ImageBackground>
+    }
+}
+
+export class ListCoverImageBackgroundComponentArchived extends React.Component{
+    render(){
+        return <ImageBackground style={globalStyles.homePage_editionItem_ImgBackground} imageStyle={{opacity: 0.4}}
+        source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + this.props.signedUserUid + "/" + this.props.coverImage }} >
+        <View style={globalStyles.monthYearView}>
+            <Text style={globalStyles.monthYearLabel}>{this.props.month} {this.props.year}</Text>
+        </View>
+    </ImageBackground>
     }
 }
 
@@ -31,13 +52,13 @@ export class ContributorsDaysLeftComponent extends React.Component {
                 <Image source={require('../../assets/group.png')} style={{ width: 18, height: 18, marginRight: 5, marginLeft: 5 }} />
                 <Text style={globalStyles.home_listItem_Contributors_Days}>{this.props.contributorsNb} {this.props.contributorss}</Text>
             </View>
-            {this.props.accessStatus === 0 ? (
+            {/* {this.props.accessStatus === 0 ? (
                 <View style={globalStyles.row_div_homePage_singleView_DaysLeft_Contributors}>
                     <Text style={globalStyles.home_listitem_bulletpoint}>•</Text>
                     <Image source={require('../../assets/clock.png')} style={{ width: 18, height: 18, marginRight: 5 }} />
                     <Text style={globalStyles.home_listItem_Contributors_Days}>{this.props.daysLeftFromDB} {this.props.daysLeft}</Text>
                 </View>
-            ) : null}
+            ) : null} */}
         </View>
     }
 }

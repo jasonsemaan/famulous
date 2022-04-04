@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity} from "react-native";
 import RadioForm from "react-native-simple-radio-button";
 import { globalStyles } from "../../../03-constants/global";
 import { strings } from "../../../../App";
+import { JournalContext } from "../../04-context/Context";
 
 const DeliveryPage = ({ navigation }) => {
+
+    const myContext = useContext(JournalContext);
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
 
     //Labels
     let [delivery, setDelivery] = useState("Delivery");
@@ -19,7 +23,7 @@ const DeliveryPage = ({ navigation }) => {
     /**  get params from async storage  */
     const getAsyncStorageData = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setDelivery(strings.delivery)
             setPleaseFillIn(strings.please_fill_in)
             setYouCanSkip(strings.you_can_skip_for_later)

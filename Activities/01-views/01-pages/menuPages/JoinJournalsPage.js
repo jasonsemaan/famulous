@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext} from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Modal, Keyboard } from "react-native";
 import auth, { firebase } from '@react-native-firebase/auth';
 import { globalStyles } from "../../../03-constants/global";
@@ -8,8 +8,11 @@ import { strings } from "../../../../App";
 import NetInfo from "@react-native-community/netinfo";
 import { ModalConnection } from "../../02-components/ConnectionComponent";
 import { UpdateSharedKey } from "../../03-providers/JournalProvider";
+import { JournalContext } from "../../04-context/Context";
 
 const JoinJournalsPage = ({ navigation }) => {
+    const myContext = useContext(JournalContext);
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
 
     //Labels
     let [join_a_Journal, setJoinaJournal] = useState("Join a journal");
@@ -75,7 +78,7 @@ const JoinJournalsPage = ({ navigation }) => {
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setJoinaJournal(strings.join_a_Journal)
             setYouWereInvitedBy(strings.youWereInvitedBy)
             setEnterKeyToJoin(strings.enterkeytoJoin)

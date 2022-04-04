@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, TextI
 import { globalStyles } from "../../../../Activities/03-constants/global";
 
 const LinksSharingPage = ({ route, navigation }) => {
-    var adminName = route.params.adminName
     return (
         <View style={globalStyles.JournalDetails_main_Container}>
             <View style={globalStyles.viewFlex1}>
@@ -12,7 +11,7 @@ const LinksSharingPage = ({ route, navigation }) => {
                         <View style={globalStyles.main_headerDiv_backandtitle}>
                             <View style={globalStyles.subHeaderViewbackgroundYellow}>
                                 <View style={globalStyles.headerGlobalLeftRightView}>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails', { admin: adminName })}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails')}>
                                     <View style={{ padding: 8 }}>
                                         <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                                         </View>

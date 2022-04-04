@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import { globalStyles } from "../../../03-constants/global";
 import CountryPicker from 'react-native-country-picker-modal'
 import { CountryCode, Country } from './src/types'
 import { strings } from "../../../../App";
+import { JournalContext } from "../../04-context/Context";
 
 const ShippingAddressPage = ({ route, navigation }) => {
-  var admin = route.params.admin
+
+  const myContext = useContext(JournalContext);
+  let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
+
   let [inputs, setInputs] = useState([{ key: '', value: '' }])
   let [withFlag, setWithFlag] = useState(true)
   let [withCountryNameButton, setWithCountryNameButton] = useState(true)
@@ -58,7 +62,7 @@ const ShippingAddressPage = ({ route, navigation }) => {
   /** get params from async storage */
   const getAsyncStorageData = async () => {
     try {
-      strings.setLanguage(global.appLanguage)
+      strings.setLanguage(contextAppLanguage)
       setShippingAddress(strings.shippingAddress)
       setShippingInformation(strings.shippingInformation)
       setNameOnTheMailbox(strings.nameOnTheMailbox)
@@ -90,7 +94,7 @@ const ShippingAddressPage = ({ route, navigation }) => {
             <View style={globalStyles.main_headerDiv_backandtitle}>
               <View style={globalStyles.subHeaderViewbackgroundYellow}>
                 <View style={globalStyles.headerGlobalLeftRightView}>
-                  <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings', { adminName: admin })}>
+                  <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings')}>
                     <View style={{ padding: 8 }}>
                       <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                     </View>

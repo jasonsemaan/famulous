@@ -305,7 +305,7 @@ export class ImageBackgroundDefault extends React.Component{
     render(){
         return  <ImageBackground style={globalStyles.journalPreview_MainPage_ImgBackground} source={require('../../assets/defaultCover.jpg')}>
         <View style={globalStyles.previewCoverView}>
-            <Text style={globalStyles.labelWhiteBold}>{global.EditionReleaseDate}</Text>
+            <Text style={globalStyles.labelWhiteBold}>{this.props.selectedMonthYear}</Text>
         </View>
     </ImageBackground>
     }
@@ -313,9 +313,9 @@ export class ImageBackgroundDefault extends React.Component{
 
 export class ImageBackgroundCover extends React.Component{
     render(){
-        return  <ImageBackground style={globalStyles.journalPreview_MainPage_ImgBackground} source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + global.Admin + "/" + global.CoverImage }}>
+        return  <ImageBackground style={globalStyles.journalPreview_MainPage_ImgBackground} source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + this.props.admin + "/" + this.props.coverImage }}>
         <View style={globalStyles.previewCoverView}>
-            <Text style={globalStyles.labelWhiteBold}>{global.EditionReleaseDate}</Text>
+            <Text style={globalStyles.labelWhiteBold}>{this.props.selectedMonthYear}</Text>
         </View>
     </ImageBackground>
     }
@@ -324,7 +324,7 @@ export class ImageBackgroundCover extends React.Component{
 export class SinglePageFooterComponent extends React.Component{
     render(){
         return  <View style={globalStyles.previewSinglePageFooterView}>
-        <Text style={globalStyles.purpleBoldLable}>{global.JournalName}</Text>
+        <Text style={globalStyles.purpleBoldLable}>{this.props.journalName}</Text>
         <Text style={globalStyles.purpleBoldLable}>{this.props.pageNb}</Text>
         <View>
             <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo}/>

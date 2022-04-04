@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity, FlatList, Modal } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import moment from "moment";
@@ -15,6 +15,7 @@ import { constants } from "../../03-constants/Constants";
 import { PortraitDescription, PortraitNoDescription, PortraitFullDescription, PortraitFullNoDescription, LandscapeDescription, LandscapeNoDescription, ModalDetailsComponent, MainLandscapeDescView, MainPortraitNoDescView, MainPortraitFullView, MainLandscapeNoDescView } from "../02-components/JournalDetailsComponents";
 import { getUser } from "../03-providers/UserProvider";
 import { StoreImage } from "../03-providers/ImagesProvider";
+import { JournalContext } from "../04-context/Context";
 
 var jsonLayoutsData = [
     { id: 1, type: "portraitDesc" },
@@ -26,8 +27,15 @@ var jsonLayoutsData = [
 ]
 
 const JournalDetails = ({ route, navigation }) => {
-    var admin = route.params.admin
+    const myContext = useContext(JournalContext);
+
     const currentDate = moment().format('DD-MM-YYYY')
+    let [contextAccessStatus, setContextAccessStatus] = useState(myContext.accessStatus)
+    let [contextEditionRef, setContextEditionRef] = useState(myContext.EditionRef)
+    let [dateMonthSelected, setDateMonthSelected] = useState(myContext.DateMonth)
+    let [contextJournalName, setContextJournalName] = useState(myContext.JournalName)
+    let [contextEditionDaysLeft, setContextEditionDaysLeft] = useState(myContext.editionDaysLeft)
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
 
     let [description, setDescription] = useState("")
     let [imgOrientation, setImgOrientation] = useState("PORTRAIT")
@@ -58,6 +66,7 @@ const JournalDetails = ({ route, navigation }) => {
     //Labels
     let [preview, setPreview] = useState('Preview')
     let [sorting, setSorting] = useState('Sorting')
+    let [daysLeft, setDaysLeft] = useState("Days Left");
     let [writedescription, setWriteDescription] = useState('Write a description')
     let [upload, setUpload] = useState('Upload')
     let [chooseImage, setchooseImage] = useState('Choose Image')
@@ -189,7 +198,7 @@ const JournalDetails = ({ route, navigation }) => {
                 return;
             }
             user.getIdToken().then(function (idToken) {
-                global.Token = idToken
+                myContext.setToken(idToken);
                 getUserProfile(idToken)
                 setCurrentToken(idToken)
             });
@@ -251,9 +260,10 @@ const JournalDetails = ({ route, navigation }) => {
     /**  get params from async storage  */
     const getAsyncStorageData = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setPreview(strings.preview)
             setSorting(strings.sorting)
+            setDaysLeft(strings.daysLeft)
             setWriteDescription(strings.writeadescription)
             setUpload(strings.upload)
             setchooseImage(strings.chooseImage)
@@ -280,7 +290,7 @@ const JournalDetails = ({ route, navigation }) => {
                             ? imageSelected
                             : imageSelected.replace("file://", "")
                 })
-                data.append('editionRef', global.EditionRef)
+                data.append('editionRef', contextEditionRef)
                 data.append('imgDescription', description)
                 data.append('imgOrientation', imgOrientation)
                 data.append('imgDescriptionVisible', imgDescriptionVisible)
@@ -399,29 +409,35 @@ const JournalDetails = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={globalStyles.detailsHeaderMiddleView}>
-                        <Text style={globalStyles.detailsSelectedJournalNameTitle}>{global.JournalName}</Text>
-                        <Text style={globalStyles.detailsSelectedmonthTitle}>{admin}</Text>
+                        <Text style={globalStyles.detailsSelectedJournalNameTitle}>{contextJournalName}</Text>
+                        <Text style={globalStyles.detailsSelectedmonthTitle}>{dateMonthSelected}</Text>
                     </View>
                     <View style={globalStyles.detailsHeaderRightView}>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings', { adminName: admin })}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings')}>
                             <Image style={globalStyles.detailsSettingsIcon} source={require('../../assets/settingIcon.png')} /></TouchableOpacity>
                     </View>
                 </View>
             </View>
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-                <View style={{ flex: 1, marginTop: 20 }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 1, alignItems: 'center' }}>
+                <View style={{ flex: 1, marginTop: 10 }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ width: 120, borderRadius: 8, backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center', height: 20, flexDirection: 'row' }}>
+                            {/* <Image source={require('../../assets/clock.png')} style={{ width: 18, height: 18, marginRight: 5 }} /> */}
+                            <Text style={{ fontSize: 11, color:'black' }}>{contextEditionDaysLeft} {daysLeft}</Text>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 1, alignItems: 'center', marginTop: 10 }}>
                         <View style={globalStyles.viewWidth100FlexRow}>
-                            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalPreview', { adminName: admin, journalEditionRef: global.EditionRef })}>
+                            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalPreview')}>
                                 <Text style={globalStyles.journalDetails_prev_sort_btn}>{preview}</Text>
                             </TouchableOpacity>
-                            {global.accessStatus == 0 ? (
-                                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSorting', { adminName: admin })}>
+                            {contextAccessStatus == 0 ? (
+                                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSorting')}>
                                     <Text style={globalStyles.journalDetails_prev_sort_btn}>Images</Text>
                                 </TouchableOpacity>
                             ) : null
                             }
-                            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CalendarPage', { adminName: admin })} style={{ marginLeft: 'auto', marginRight: 20 }}>
+                            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CalendarPage')} style={{ marginLeft: 'auto', marginRight: 20 }}>
                                 <Image style={globalStyles.detailsCalendarIcon} source={require('../../assets/desktop-calendar.png')} />
                             </TouchableOpacity>
                         </View>
@@ -541,10 +557,10 @@ const JournalDetails = ({ route, navigation }) => {
                                 <Text style={{ fontSize: 10, color: '#9b56a2', fontWeight: '600' }}>{chooseyourimagelayout}</Text>
                             </View>
                             <View>
-                               <FlatList showsHorizontalScrollIndicator={false} 
-                                            data={jsonLayoutsData} 
-                                            renderItem={_renderItemLayoutsData} 
-                                            horizontal={true} />    
+                                <FlatList showsHorizontalScrollIndicator={false}
+                                    data={jsonLayoutsData}
+                                    renderItem={_renderItemLayoutsData}
+                                    horizontal={true} />
                             </View>
                             <View style={{ marginBottom: 30 }}>
                                 {imageSelected != "" ? (

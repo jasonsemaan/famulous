@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Modal} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -13,8 +13,12 @@ import NetInfo from "@react-native-community/netinfo";
 import { constants } from "../../../03-constants/Constants";
 import { ModalConnection } from "../../02-components/ConnectionComponent";
 import { getUser, UpdateUserProfile } from "../../03-providers/UserProvider";
+import { JournalContext } from "../../04-context/Context";
 
 const MyProfilePage = ({ navigation }) => {
+    const myContext = useContext(JournalContext);
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
+
     let [signedUserName, setSignedUserName] = useState("");
     let [signedUserUid, setSignedUserUid] = useState("");
     let [signedUserbirthday, setSignedUserbirthday] = useState("");
@@ -110,7 +114,7 @@ const MyProfilePage = ({ navigation }) => {
     /**  get params from async storage */
     const getAsyncStorageData = () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setMyProfile(strings.myProfile)
             setEditJournalProfile(strings.editJournalProfile)
             setName(strings.name)
@@ -298,7 +302,7 @@ const MyProfilePage = ({ navigation }) => {
 
                                     <Text style={globalStyles.myProfile_titleInput}>{email}</Text>
                                     <View style={globalStyles.myprofile_Input}>
-                                        <TextInput style={globalStyles.myProfile_textInput} underlineColorAndroid="transparent" defaultValue={signedUserEmail} onChangeText={(text) => setSignedUserEmail(text)} /></View>
+                                        <TextInput style={globalStyles.myProfile_textInput} underlineColorAndroid="transparent" defaultValue={signedUserEmail} onChangeText={(text) => setSignedUserEmail(text)} editable={false}/></View>
 
                                     <View style={globalStyles.flexRow}>
                                         <Text style={globalStyles.myProfile_titleInput}>{currentPasswordLabel}</Text>

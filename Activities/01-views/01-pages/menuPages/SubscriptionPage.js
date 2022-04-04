@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity, FlatList} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { globalStyles } from "../../../03-constants/global";
 import { strings } from "../../../../App";
+import { JournalContext } from "../../04-context/Context";
 
 var jsonData = [
     { id: 1, name: "Me", admin: true },
@@ -12,6 +13,8 @@ var jsonData = [
 ]
 
 const SubscriptionPage = ({ navigation }) => {
+    const myContext = useContext(JournalContext);
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
 
      //Labels
      let [subscription, setSubscription] = useState("Subscription");
@@ -27,7 +30,7 @@ const SubscriptionPage = ({ navigation }) => {
     /** get params from async storage */ 
      const getAsyncStorageData = () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setSubscription(strings.subscription)
             setSubscribeToaPlan(strings.subscribeTo_a_Plan)
             setYouWillGetTheCode(strings.youWillgetTheCode)

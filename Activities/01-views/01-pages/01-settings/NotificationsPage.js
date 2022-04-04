@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity } from
 import { globalStyles } from "../../../../Activities/03-constants/global";
 
 const SettingsPage = ({ route, navigation }) => {
-    var admin = route.params.admin
     return (
         <View style={globalStyles.JournalDetails_main_Container}>
             <View style={globalStyles.viewFlex1}>
@@ -13,7 +12,7 @@ const SettingsPage = ({ route, navigation }) => {
                         <View style={globalStyles.main_headerDiv_backandtitle}>
                             <View style={globalStyles.subHeaderViewbackgroundYellow}>
                                 <View style={globalStyles.headerGlobalLeftRightView}>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings', { adminName: admin })}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings')}>
                                         <View style={{ padding: 8 }}>
                                             <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                                         </View>

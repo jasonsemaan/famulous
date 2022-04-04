@@ -33,9 +33,10 @@ import DrawerNav from './Activities/02-navigation/DrawerNav';
 import LocalizedStrings from 'react-native-localization';
 import english from './Activities/04-translation/en'
 import french from './Activities/04-translation/fr'
+import { JournalProvider, JournalContext } from './Activities/01-views/04-context/Context';
 export const strings = new LocalizedStrings({
-    en: english,
-    fr: french,
+  en: english,
+  fr: french,
 });
 
 
@@ -47,8 +48,8 @@ const Drawer = createDrawerNavigator();
 const Root = () => {
   return (
     <Drawer.Navigator initialRouteName="HomePage"
-     drawerContent={(props) => <DrawerNav {...props} />}>
-      <Drawer.Screen name="Home Page" component={HomePage} options={{headerShown: false}}/>
+      drawerContent={(props) => <DrawerNav {...props} />}>
+      <Drawer.Screen name="Home Page" component={HomePage} options={{ headerShown: false }} />
     </Drawer.Navigator>
   );
 }
@@ -56,38 +57,39 @@ const Root = () => {
 const MyStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
-        <Stack.Screen name="CreateAccountPage" component={CreateAccountPage} options={{ headerShown: false }} />
-        <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: false }} />
-        <Stack.Screen
-          name="Root"
-          component={Root}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="JournalDetails" component={JournalDetails} options={{ headerShown: false }} />
-        <Stack.Screen name="JournalSettings" component={JournalSettings} options={{ headerShown: false }} />
-        <Stack.Screen name="Contributors" component={Contributors} options={{ headerShown: false }} />
-        <Stack.Screen name="SettingsPage" component={SettingsPage} options={{ headerShown: false }} />
-        <Stack.Screen name="NotificationsPage" component={NotificationsPage} options={{ headerShown: false }} />
-        <Stack.Screen name="ShippingAddressPage" component={ShippingAddressPage} options={{ headerShown: false }} />
-        <Stack.Screen name="LinksSharingPage" component={LinksSharingPage} options={{ headerShown: false }} />
-        <Stack.Screen name="UploadImagesPage" component={UploadImagesPage} options={{ headerShown: false }} />
-        <Stack.Screen name="ChatPage" component={ChatPage} options={{ headerShown: false }} />
-        <Stack.Screen name="CalendarPage" component={CalendarPage} options={{ headerShown: false }}/>
-        <Stack.Screen name="MyProfilePage" component={MyProfilePage} options={{ headerShown: false }} />
-        <Stack.Screen name="JoinJournalsPage" component={JoinJournalsPage} options={{ headerShown: false }} />
-        <Stack.Screen name="SubscriptionPage" component={SubscriptionPage} options={{ headerShown: false }} />
-        <Stack.Screen name="HowItWorksPage" component={HowItWorksPage} options={{ headerShown: false }} />
-        <Stack.Screen name="SupportPage" component={SupportPage} options={{ headerShown: false }} />
-        <Stack.Screen name="DeliveryPage" component={DeliveryPage} options={{ headerShown: false }} />
-        <Stack.Screen name="PaymentPage" component={PaymentPage} options={{ headerShown: false }} />
-        <Stack.Screen name="JournalPreview" component={JournalPreview} options={{ headerShown: false }} />
-        <Stack.Screen name="JournalSorting" component={JournalSorting} options={{ headerShown: false }} />
-        <Stack.Screen name="ForgotPasswordPage" component={ForgotPasswordPage} options={{ headerShown: false }} />
+ <JournalProvider>
+           <Stack.Navigator>
+          <Stack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
+          <Stack.Screen name="CreateAccountPage" component={CreateAccountPage} options={{ headerShown: false }} />
+          <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: false }} />
+          <Stack.Screen
+            name="Root"
+            component={Root}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="JournalDetails" component={JournalDetails} options={{ headerShown: false }} />
+          <Stack.Screen name="JournalSettings" component={JournalSettings} options={{ headerShown: false }} />
+          <Stack.Screen name="Contributors" component={Contributors} options={{ headerShown: false }} />
+          <Stack.Screen name="SettingsPage" component={SettingsPage} options={{ headerShown: false }} />
+          <Stack.Screen name="NotificationsPage" component={NotificationsPage} options={{ headerShown: false }} />
+          <Stack.Screen name="ShippingAddressPage" component={ShippingAddressPage} options={{ headerShown: false }} />
+          <Stack.Screen name="LinksSharingPage" component={LinksSharingPage} options={{ headerShown: false }} />
+          <Stack.Screen name="UploadImagesPage" component={UploadImagesPage} options={{ headerShown: false }} />
+          <Stack.Screen name="ChatPage" component={ChatPage} options={{ headerShown: false }} />
+          <Stack.Screen name="CalendarPage" component={CalendarPage} options={{ headerShown: false }} />
+          <Stack.Screen name="MyProfilePage" component={MyProfilePage} options={{ headerShown: false }} />
+          <Stack.Screen name="JoinJournalsPage" component={JoinJournalsPage} options={{ headerShown: false }} />
+          <Stack.Screen name="SubscriptionPage" component={SubscriptionPage} options={{ headerShown: false }} />
+          <Stack.Screen name="HowItWorksPage" component={HowItWorksPage} options={{ headerShown: false }} />
+          <Stack.Screen name="SupportPage" component={SupportPage} options={{ headerShown: false }} />
+          <Stack.Screen name="DeliveryPage" component={DeliveryPage} options={{ headerShown: false }} />
+          <Stack.Screen name="PaymentPage" component={PaymentPage} options={{ headerShown: false }} />
+          <Stack.Screen name="JournalPreview" component={JournalPreview} options={{ headerShown: false }} />
+          <Stack.Screen name="JournalSorting" component={JournalSorting} options={{ headerShown: false }} />
+          <Stack.Screen name="ForgotPasswordPage" component={ForgotPasswordPage} options={{ headerShown: false }} />
 
-      </Stack.Navigator>
-
+        </Stack.Navigator>
+      </JournalProvider>
       {/* <Drawer.Navigator>
         <Drawer.Screen name="HomePage" component={HomePage} />
       </Drawer.Navigator> */}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, TextInput, Modal } from "react-native";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
@@ -11,10 +11,13 @@ import NetInfo from "@react-native-community/netinfo";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { ModalConnection } from "../../02-components/ConnectionComponent";
 import { CreateEvent, DeleteEvent, GetEditionEvents } from "../../03-providers/EventsProvider";
+import { JournalContext } from "../../04-context/Context";
 
 const CalendarPage = ({ route, navigation }) => {
+    const myContext = useContext(JournalContext);
+    let [contextEditionRef, setContextEditionRef] = useState(myContext.EditionRef)
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
 
-    var adminName = route.params.adminName
     let [modalStatus, setModalStatus] = useState(false)
     let [loading, setLoading] = useState(false)
     let [selectedDate, setSelectedDate] = useState('')
@@ -77,7 +80,7 @@ const CalendarPage = ({ route, navigation }) => {
     /** add event to DB */
     const addEventToDB = () => {
         setLoading(true)
-        CreateEvent(currentToken, global.EditionRef, selectedDate, eventDescription)
+        CreateEvent(currentToken, contextEditionRef, selectedDate, eventDescription)
             .then((response) => response.json())
             .then((responseJson) => addingEvent(responseJson))
             .catch((error)=>{console.log(error)})
@@ -93,7 +96,7 @@ const CalendarPage = ({ route, navigation }) => {
 
     /** function to re-call the getEditionEvents to get all events from db */
     const addingEvent = (responseJson) => {
-        getEditionEvents(global.EditionRef)
+        getEditionEvents(contextEditionRef)
     }
 
     /** function to delete event from list */
@@ -129,7 +132,7 @@ const CalendarPage = ({ route, navigation }) => {
     /** get params from async storage */
     const getAsyncStorageDataForNoConnection = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setNoInternetConnection(strings.noInternetConnection)
             setRefresh(strings.refresh)
         } catch (e) {
@@ -140,7 +143,7 @@ const CalendarPage = ({ route, navigation }) => {
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setCalendar(strings.calendar)
             setAddEventLabel(strings.addEvent)
             setAddEventInLabel(strings.addEventIn)
@@ -148,7 +151,7 @@ const CalendarPage = ({ route, navigation }) => {
             setPleaseWriteAdescription(strings.pleaseWriteAdescription)
             setNoInternetConnection(strings.noInternetConnection)
             setRefresh(strings.refresh)
-            getEditionEvents(global.EditionRef)
+            getEditionEvents(contextEditionRef)
         } catch (e) {
             console.log(e)
         }
@@ -195,6 +198,7 @@ const CalendarPage = ({ route, navigation }) => {
     }
 
     useEffect(() => {
+        console.log("  --   ", contextEditionRef)
         checkConnection()
         return () => {
         }
@@ -213,7 +217,7 @@ const CalendarPage = ({ route, navigation }) => {
                         <View style={globalStyles.main_headerDiv_backandtitle}>
                             <View style={globalStyles.subHeaderViewbackgroundYellow}>
                                 <View style={globalStyles.headerGlobalLeftRightView}>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails', { admin: adminName })}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails')}>
                                         <View style={{ padding: 8 }}>
                                             <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                                         </View>

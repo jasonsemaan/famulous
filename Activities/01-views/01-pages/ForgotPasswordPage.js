@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import auth, { firebase } from '@react-native-firebase/auth';
 import { globalStyles } from "../../../Activities/03-constants/global";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 import { strings } from "../../../App";
 import { NoInternetConnection } from "../02-components/ConnectionComponent";
+import { JournalContext } from "../04-context/Context";
 
 const ForgotPasswordPage = ({ navigation }) => {
+
+    const myContext = useContext(JournalContext);
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
 
     let [emailVerification, setEmailVerification] = useState("")
     let [isConnectedToInternet, setIsConnectedToInternet] = useState(true);
@@ -24,7 +29,8 @@ const ForgotPasswordPage = ({ navigation }) => {
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            console.log("LAN ; ",await AsyncStorage.getItem('appLanguage'))
+            strings.setLanguage(await AsyncStorage.getItem('appLanguage'))
             setResetPassword(strings.resetPassword)
             setEnterAnEmailAddressYouUsetoSignIn(strings.enterEmailAddressYouUsetoSignIn)
             setEmailAddress(strings.emailAddress)

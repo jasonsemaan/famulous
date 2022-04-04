@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext} from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Switch } from "react-native";
 import { globalStyles } from "../03-constants/global";
 import auth, { firebase } from '@react-native-firebase/auth';
@@ -8,8 +8,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { strings } from "../../App";
 import { constants } from "../03-constants/Constants";
 import { useIsFocused } from '@react-navigation/native';
+import { JournalContext } from "../01-views/04-context/Context";
 
 const DrawerNav = ({ navigation }) => {
+
+    const myContext = useContext(JournalContext);
+
     const [scrollStatus, setScrollStatus] = useState(0)
     const [userUid, setUserUid] = useState("")
     const isFocused = useIsFocused();
@@ -35,12 +39,12 @@ const DrawerNav = ({ navigation }) => {
         //English
          setIsEnabled(true)
          AsyncStorage.setItem('appLanguage', 'en')
-         global.appLanguage="en"
+         myContext.setAppLanguage('en');
     }else{
         //France
         setIsEnabled(false)
          AsyncStorage.setItem('appLanguage', 'fr')
-         global.appLanguage="fr"
+         myContext.setAppLanguage('fr');
     }
     getAsyncStorageData()
     }

@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { globalStyles } from "../../../03-constants/global";
 import { strings } from "../../../../App";
-
+import { JournalContext } from "../../04-context/Context";
 
 const HowItWorksPage = ({ navigation }) => {
+    const myContext = useContext(JournalContext);
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
+
     //Labels
     let [howitworks, sethowItWorks] = useState("How it works");
     let [familyTime_is_a, setfamilyTimeIsA] = useState("FamilyTime is a service that allows you to create a monthly journal that collects photos of your family for yout parents or grandparents who are not comfortable with smartphones, social networks or who simply enjoy a hard copy");
@@ -23,7 +26,7 @@ const HowItWorksPage = ({ navigation }) => {
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             sethowItWorks(strings.howitworks)
             setfamilyTimeIsA(strings.familyTime_is_a)
             setYouOrThePerson(strings.you_or_thePerson)

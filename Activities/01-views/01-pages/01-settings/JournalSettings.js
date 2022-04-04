@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, ImageBackground, TouchableOpacity } from "react-native";
 import { globalStyles } from "../../../../Activities/03-constants/global";
 import { strings } from "../../../../App";
+import { JournalContext } from "../../04-context/Context";
 
 const JournalSettings = ({ route, navigation }) => {
-  var adminName = route.params.adminName
+  const myContext = useContext(JournalContext);
+  let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
 
   //Labels
   let [contributor, setContributor] = useState("Contributors");
@@ -14,7 +16,7 @@ const JournalSettings = ({ route, navigation }) => {
   /** get params from async storage */
   const getAsyncStorageData = async () => {
     try {
-      strings.setLanguage(global.appLanguage)
+      strings.setLanguage(contextAppLanguage)
       setContributor(strings.contributors)
       setSettings(strings.settings)
       setJournalSettings(strings.journalSettings)
@@ -38,7 +40,7 @@ const JournalSettings = ({ route, navigation }) => {
             <View style={globalStyles.main_headerDiv_backandtitle}>
               <View style={globalStyles.subHeaderViewbackgroundYellow}>
                 <View style={globalStyles.headerGlobalLeftRightView}>
-                  <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails', { admin: adminName })}>
+                  <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails')}>
                     <View style={{ padding: 8 }}>
                       <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                     </View>
@@ -57,7 +59,7 @@ const JournalSettings = ({ route, navigation }) => {
       <View style={{ flex: 3 }}>
         <View style={{ height: 'auto' }}>
           <View style={styles.navigationView}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Contributors', { admin: adminName })}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Contributors')}>
               <View style={globalStyles.viewRowAlignCenter}>
                 <Image style={globalStyles.journalSettings_lefticon} source={require('../../../assets/settings_contributors_icon.png')} />
                 <Text style={globalStyles.journalSettings_label}>{contributor}</Text>
@@ -68,7 +70,7 @@ const JournalSettings = ({ route, navigation }) => {
           </View>
 
           <View style={styles.navigationView}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('SettingsPage', { admin: adminName })}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('SettingsPage')}>
               <View style={globalStyles.viewRowAlignCenter}>
                 <Image style={globalStyles.journalSettings_lefticon} source={require('../../../assets/settings_settings_icon.png')} />
                 <Text style={globalStyles.journalSettings_label}>{settings}</Text>
@@ -78,7 +80,7 @@ const JournalSettings = ({ route, navigation }) => {
           </View>
 
           <View style={styles.navigationView}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('NotificationsPage', { admin: adminName })}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('NotificationsPage')}>
               <View style={globalStyles.viewRowAlignCenter}>
                 <Image style={globalStyles.journalSettings_lefticon} source={require('../../../assets/settings_notifications_icon.png')} />
                 <Text style={globalStyles.journalSettings_label}>Notifications</Text>
@@ -88,7 +90,7 @@ const JournalSettings = ({ route, navigation }) => {
           </View>
 
           <View style={styles.navigationView}>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('ShippingAddressPage', { admin: adminName })}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('ShippingAddressPage')}>
               <View style={globalStyles.viewRowAlignCenter}>
                 <Image style={globalStyles.journalSettings_lefticon} source={require('../../../assets/settings_destination_icon.png')} />
                 <Text style={globalStyles.journalSettings_label}>Destination</Text>

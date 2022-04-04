@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, Modal, Alert } from "react-native";
 import { globalStyles } from "../../../../Activities/03-constants/global";
 import auth from '@react-native-firebase/auth';
@@ -11,9 +11,17 @@ import NetInfo from "@react-native-community/netinfo";
 import { constants } from "../../../03-constants/Constants";
 import { ModalConnection } from "../../02-components/ConnectionComponent";
 import { GetAllJournalContributors, GetKey, InsertAdminSharedkey, RemoveContributorFromInvites } from "../../03-providers/JournalProvider";
+import { JournalContext } from "../../04-context/Context";
 
 const Contributors = ({ route, navigation }) => {
-    var admin = route.params.admin
+
+    const myContext = useContext(JournalContext);
+    let [contextAccessStatus, setContextAccessStatus] = useState(myContext.accessStatus)
+    let [contextAdmin, setContextAdmin] = useState(myContext.Admin)
+    let [contextJournalName, setContextJournalName] = useState(myContext.JournalName)
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
+    let [contextJournalRef, setContextJournalRef] = useState(myContext.JournalRef)
+
     let [modalStatus, setModalStatus] = useState(false)
     let [key, setKey] = useState("")
     let [currentToken, setCurrentToken] = useState("")
@@ -118,7 +126,7 @@ const Contributors = ({ route, navigation }) => {
     /** insert admin and the key into DB */
     const insertAdminSharedKey = (idToken) => {
         setLoading(true)
-        InsertAdminSharedkey(idToken, global.JournalRef, key)
+        InsertAdminSharedkey(idToken, contextJournalRef, key)
             .then((response) => response.json())
             .then((responseJson) => whenSuccessInsert(responseJson))
             .catch((error)=>{console.log(error)})
@@ -157,9 +165,9 @@ const Contributors = ({ route, navigation }) => {
         NetInfo.fetch().then(state => {
             if (state.isConnected == true) {
                 setLoading(true)
-                RemoveContributorFromInvites(global.JournalRef, contributorUid)
+                RemoveContributorFromInvites(contextJournalRef, contributorUid)
                     .then((response) => response.json())
-                    .then(getAllContributors(global.JournalRef))
+                    .then(getAllContributors(contextJournalRef))
                     .catch((error)=>{console.log(error)})
             } else {
                 getAsyncStorageDataForNoConnection()
@@ -171,7 +179,7 @@ const Contributors = ({ route, navigation }) => {
     /** get params from async storage */
     const getAsyncStorageDataForNoConnection = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setNoInternetConnection(strings.noInternetConnection)
             setRefresh(strings.refresh)
         } catch (e) {
@@ -182,7 +190,7 @@ const Contributors = ({ route, navigation }) => {
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setContributor(strings.contributors)
             setYouCanInviteUpto10contributors(strings.youCanInviteUpto10contributors)
             setInvite(strings.invite)
@@ -198,7 +206,7 @@ const Contributors = ({ route, navigation }) => {
             setAreyousureyouwanttoremovethisContributor(strings.areyousureyouwanttoremovethisContributor)
             setNoInternetConnection(strings.noInternetConnection)
             setRefresh(strings.refresh)
-            getAllContributors(global.JournalRef)
+            getAllContributors(contextJournalRef)
         } catch (e) {
             console.log(e)
         }
@@ -239,11 +247,11 @@ const Contributors = ({ route, navigation }) => {
                     resizeMode={FastImage.resizeMode.cover}
                 />
                 <Text style={globalStyles.contributorListUserName}>{item.USER_NAME}</Text>
-                {item.OWNER_UID == global.Admin ? (
+                {item.OWNER_UID == contextAdmin ? (
                     <Text style={globalStyles.contributorListIsAdminLabel}>{admin}</Text>
                 ) :
                     <View style={{ marginLeft: 'auto' }}>
-                        {global.accessStatus == 0 ? (
+                        {contextAccessStatus == 0 ? (
                             <TouchableOpacity onPress={() => removeDialog(item.OWNER_UID)}>
                                 <View style={{ width: 60, height: 30 }}>
                                     <Text style={globalStyles.contributorListIsnotAdmin}>{notAdmin}</Text>
@@ -269,7 +277,7 @@ const Contributors = ({ route, navigation }) => {
                         <View style={globalStyles.main_headerDiv_backandtitle}>
                             <View style={globalStyles.subHeaderViewbackgroundYellow}>
                                 <View style={globalStyles.headerGlobalLeftRightView}>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings', { adminName: admin })}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings')}>
                                         <View style={{ padding: 8 }}>
                                             <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                                         </View>
@@ -291,7 +299,7 @@ const Contributors = ({ route, navigation }) => {
                 </SafeAreaView>
             </View>
 
-            {global.accessStatus == 0 ? (
+            {contextAccessStatus == 0 ? (
                 <View style={globalStyles.contributors_footer_tabs}>
                     <Text style={{ color: '#9b56a2' }}>{youCanInviteUpto10contributors}</Text>
                     <TouchableOpacity activeOpacity={0.8} onPress={() => openShareKeyModal()}>
@@ -307,7 +315,7 @@ const Contributors = ({ route, navigation }) => {
                     <View style={globalStyles.modalDivstyle}>
                         <View style={globalStyles.shareKeyModalMainView}>
                             <Text style={globalStyles.greyTextFont16}>{invite_a_contributor}{'\n'}</Text>
-                            <Text style={globalStyles.greyTextFont14}>{this_is_a_uniqueKey}{global.JournalName}'s {shareItWiththePeopleYouWould}{'\n'} {'\n'} </Text>
+                            <Text style={globalStyles.greyTextFont14}>{this_is_a_uniqueKey}{contextJournalName}'s {shareItWiththePeopleYouWould}{'\n'} {'\n'} </Text>
                             <Text style={globalStyles.purpleKeyTextFont24}>{key} {'\n'}</Text>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => shareKeyOpenDialog()}>
                                 <View style={globalStyles.contributors_button}>

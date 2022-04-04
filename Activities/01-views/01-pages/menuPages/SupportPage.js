@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState,useRef, useContext } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity} from "react-native";
 import { globalStyles } from "../../../03-constants/global";
 

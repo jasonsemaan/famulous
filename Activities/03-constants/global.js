@@ -1030,6 +1030,16 @@ export const globalStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    SortingSave_button: {
+        display: 'flex',
+        width: 200,
+        backgroundColor: '#febf2e',
+        padding: 7,
+        borderRadius: 30,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     homepage_categoriesButton: {
         display: 'flex',
         width: 150,
@@ -1535,9 +1545,8 @@ export const globalStyles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 15,
         alignSelf: 'flex-end',
-        marginRight: 20
     },
     addJournal_button_style: {
         display: 'flex',
@@ -1547,9 +1556,18 @@ export const globalStyles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 25,
         alignSelf: 'flex-end',
-        marginRight: 20,
+    },
+    changeDesc_button_style: {
+        display: 'flex',
+        width: 120,
+        height: 35,
+        backgroundColor: '#febf2e',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 25,
     },
     deleteJournal_button_style: {
         display: 'flex',
@@ -1560,7 +1578,6 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10,
         alignSelf: 'flex-end',
-        marginRight: 20,
         backgroundColor: '#F25278',
     },
     backArrow: { width: 25, height: 25, marginLeft: 10 },
@@ -1593,7 +1610,7 @@ export const globalStyles = StyleSheet.create({
         shadowOpacity: 0.1, elevation: 3,
     },
     calendarModal_textInput: {
-        width: 300, alignSelf: 'center', height: 37, fontSize: 12, color: 'black'
+        width: 320, alignSelf: 'center', height: 37, fontSize: 12, color: 'black'
     },
     DeleteJournalModal_textInput: {
         width: '100%', alignSelf: 'center', height: 37, fontSize: 12, color: 'black'
@@ -1607,6 +1624,20 @@ export const globalStyles = StyleSheet.create({
         marginLeft: 15,
         marginRight: 15,
         marginTop: 1,
+        padding: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: 37,
+    },
+    changeDescModal_InputView: {
+        display: 'flex',
+        justifyContent: 'center',
+        borderWidth: 0.5,
+        borderColor: '#D5D5D5',
+        borderRadius: 5,
+        marginLeft: 15,
+        marginRight: 15,
+        marginTop: 50,
         padding: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -1749,9 +1780,10 @@ export const globalStyles = StyleSheet.create({
     alignItemsCenter: {
         alignItems: 'center'
     },
-    modalViewfullWidthPadding10: {
-        flex: 1, width: '100%', justifyContent: 'center', padding: 10
+    modalViewCenter: {
+        flex: 1, width: '100%', justifyContent: 'center', padding: 10,alignItems:'center'
     },
+    
     marginTopAuto: {
         marginTop: 'auto'
     },
@@ -1954,7 +1986,7 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: '#ffffff', padding: 5, height: '30%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center' 
     },
     calendarMainModalView2:{
-        flex: 1, width: '100%', justifyContent: 'center', padding: 10, marginTop: 30 
+        flex: 1, width: '100%', justifyContent: 'center', padding: 10, marginTop: 30 ,alignItems:'center'
     },
     viewFlexRowCenterWithMargin:{
         flexDirection: 'row', justifyContent: 'center', alignItems: 'center', margin: 10

@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { CheckBox, Input } from "react-native-elements";
 import { globalStyles } from "../../../03-constants/global";
 import CountryPicker from 'react-native-country-picker-modal'
 import { strings } from "../../../../App";
+import { JournalContext } from "../../04-context/Context";
 
 const PaymentPage = ({ navigation }) => {
-    
+    const myContext = useContext(JournalContext);
+    let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
+
     //Labels
     let [payment, setPayment] = useState("Payment");
     let [monthlyBundle, setMonthlyBundle] = useState("Monthly bundle 1");
@@ -45,7 +48,7 @@ const PaymentPage = ({ navigation }) => {
     /** get params from async storage */ 
      const getAsyncStorageData = () => {
         try {
-            strings.setLanguage(global.appLanguage)
+            strings.setLanguage(contextAppLanguage)
             setPayment(strings.payment)
             setMonthlyBundle(strings.monthlybundle)
             setDiscount(strings.discount)

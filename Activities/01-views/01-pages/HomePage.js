@@ -1,21 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, Image, FlatList, TouchableOpacity, Modal, BackHandler, TextInput } from "react-native";
 import auth, { firebase } from '@react-native-firebase/auth';
 import { globalStyles } from "../../../Activities/03-constants/global";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from 'react-native-loading-spinner-overlay';
-import { strings } from "../../../App";
+import { AuthContext, strings } from "../../../App";
 import NetInfo from "@react-native-community/netinfo";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { useIsFocused } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
-import { ListCoverImageBackgroundComponent, ListDefaultImageBackgroundComponent, ContributorsDaysLeftComponent, NoJournalsComponent, ToggleCategoriesComponent, DrawerComponent } from "../02-components/HomePageComponent";
+import { ListCoverImageBackgroundComponent, ListDefaultImageBackgroundComponent, ContributorsDaysLeftComponent, NoJournalsComponent, ToggleCategoriesComponent, DrawerComponent, ListCoverImageBackgroundComponentArchived, ListDefaultImageBackgroundComponentArchived } from "../02-components/HomePageComponent";
 import { NoInternetConnection } from "../02-components/ConnectionComponent";
 import { ModalConnection } from "../02-components/ConnectionComponent";
 import { getUser } from "../03-providers/UserProvider";
 import { CreateJournal, InvitedJournalEditionsCall, JournalContributorsCall, JournalEditionsCall, UserInvitedJournals, UserJournals } from "../03-providers/JournalProvider";
+import { ThemeContext } from "react-native-elements";
+import { JournalContext } from "../04-context/Context";
+
 
 const HomePage = ({ navigation }) => {
+
+    const myContext = useContext(JournalContext);
+
+    let [currentAppLanguage, setCurrentAppLanguage] = useState("");
 
     let [myJournalCategorie_Status, setMyJournalCategorie_Status] = useState(true);
     let [otherJournalCategorie_Status, setOtherJournalCategorie_Status] = useState(false);
@@ -81,10 +88,12 @@ const HomePage = ({ navigation }) => {
 
     /**  get params from async storage */
     const getAsyncStorageData = async () => {
-        try {
-            global.accessStatus = 0  // 0 if admin, 1 if contributor
+        try { // 0 if admin, 1 if contributor
+            myContext.setAccessStatus(0)
             strings.setLanguage(await AsyncStorage.getItem('appLanguage'))
-            global.appLanguage = await AsyncStorage.getItem('appLanguage')
+            myContext.setAppLanguage(await AsyncStorage.getItem('appLanguage'))
+            setCurrentAppLanguage(await AsyncStorage.getItem('appLanguage'))
+
             setDaysLeft(strings.daysLeft)
             setContributor(strings.contributor)
             setContributors(strings.contributors)
@@ -120,13 +129,13 @@ const HomePage = ({ navigation }) => {
                     setOtherJournalCategorie_Status(false)
                     getAllJournalsByUser(currentToken)
                     setIsMyJournalOrOthers(0)
-                    global.accessStatus = 0
+                    myContext.setAccessStatus(0)
                 } else {   // Contributor
                     setOtherJournalCategorie_Status(true)
                     setMyJournalCategorie_Status(false)
                     getAllInvitedJournalsbyUserUID()
                     setIsMyJournalOrOthers(1)
-                    global.accessStatus = 1
+                    myContext.setAccessStatus(1)
                 }
             } else {
                 setConnectionModalStatus(true)
@@ -142,11 +151,11 @@ const HomePage = ({ navigation }) => {
                     getTokenId()
                     setMyJournalCategorie_Status(true)
                     setOtherJournalCategorie_Status(false)
-                    global.accessStatus = 0
+                    myContext.setAccessStatus(0)
                     setModalStatus(false)
                     myJournalsList.push({ journalName: journalName })
 
-                    CreateJournal(currentToken,journalName)
+                    CreateJournal(currentToken, journalName)
                         .then((response) => response.json())
                         .then((responseJson) => getAllJournalsByUser(currentToken))
                         .catch((error) => { alert("Something went wrong"), setLoading(false) })
@@ -168,7 +177,7 @@ const HomePage = ({ navigation }) => {
     };
 
     const saveUserUid = (responseJson) => {
-        global.UserUid = responseJson.userUid;
+        myContext.setUserUid(responseJson.userUid)
         setSignedUserUid(responseJson.userUid)
     }
 
@@ -224,7 +233,7 @@ const HomePage = ({ navigation }) => {
                 setJournalIndexSelected(index)
                 getUserProfile(currentToken)
 
-                JournalEditionsCall(idToken,journalName)
+                JournalEditionsCall(idToken, journalName)
                     .then((response) => response.json())
                     .then((responseJson) => storeDataIntoList(responseJson))
                     .catch((error) => { console.log(error) })
@@ -242,7 +251,7 @@ const HomePage = ({ navigation }) => {
                 setLoading(true)
                 setJournalIndexSelected(index)
                 setSignedUserUid(ownerUID)
-             
+
                 InvitedJournalEditionsCall(ownerUID, journalName)
                     .then((response) => response.json())
                     .then((responseJson) => storeDataIntoList(responseJson))
@@ -265,9 +274,9 @@ const HomePage = ({ navigation }) => {
     const storeInfosIntoAsyncStorage = (journalName, journalRef, ownerUID) => {
         getAllContributors(journalRef)
         try {
-            global.JournalName = journalName;
-            global.JournalRef = journalRef + "";
-            global.Admin = ownerUID;
+            myContext.setJournalName(journalName);
+            myContext.setJournalRef(journalRef + "");
+            myContext.setAdmin(ownerUID);
         } catch (e) {
             console.log(e)
         }
@@ -276,21 +285,34 @@ const HomePage = ({ navigation }) => {
     /** function to store the response editions data into a current list */
     const storeDataIntoList = (response) => {
         var list = [];
-        for (let i = 0; i < response.length; i++) {
-            if (response[i].archived != true) {
-                list.push({ coverImage: response[i].coverImage, editionRef: response[i].editionRef, journalRef: response[i].journalRef, releaseDateFormated: response[i].releaseDateFormated })
-            }
-        }
+        // for (let i = 0; i < response.length; i++) {
+        //     if (response[i].archived != true) {
+        //         list.push({ coverImage: response[i].coverImage, editionRef: response[i].editionRef, journalRef: response[i].journalRef, releaseDateFormated: response[i].releaseDateFormated })
+        //     }
+        // }
+        setJournalsEditionsList(response)
         setLoading(false)
-        setJournalsEditionsList(list);
+        // setJournalsEditionsList(list);
     }
 
     /** function called on click of item to navigate to the Journal Details page */
-    const navigateToJournalDetails = (releaseDateMonth, editionRef, releaseDateFormated, coverImage) => {
-        navigation.navigate('JournalDetails', { admin: releaseDateMonth + " Journal" })
-        global.EditionReleaseDate = releaseDateFormated;
-        global.CoverImage = coverImage;
-        global.EditionRef = editionRef + "";
+    const navigateToJournalDetails = (releaseDateMonth, editionRef, releaseDateFormated, coverImage, daysLeft) => {
+        navigation.navigate('JournalDetails')
+        myContext.setCoverImage(coverImage);
+        myContext.setPreviewStatus(1);
+        myContext.setEditionDaysLeft(daysLeft);
+        myContext.setEditionRef(editionRef+"")
+        myContext.setDateMonth(releaseDateMonth + " Journal")
+        myContext.setEditionReleaseDate(releaseDateFormated)
+    }
+
+    const navigateToJournalPreview = (releaseDateMonth, editionRef, releaseDateFormated, coverImage) => {
+        navigation.navigate('JournalPreview')
+        myContext.setCoverImage(coverImage);
+        myContext.setPreviewStatus(0);
+        myContext.setEditionRef(editionRef+"")
+        myContext.setDateMonth(releaseDateMonth + " Journal")
+        myContext.setEditionReleaseDate(releaseDateFormated)
     }
 
     /** function to check if internet connection is enable or not */
@@ -346,7 +368,7 @@ const HomePage = ({ navigation }) => {
         var releaseDate = item.releaseDateFormated.split(" ");
         var year = releaseDate[1]
         var month = ""
-        if (global.appLanguage == "fr") {
+        if (currentAppLanguage == "fr") {
             if (releaseDate[0] == "January") {
                 month = "Janvier"
             } else if (releaseDate[0] == "February") {
@@ -378,17 +400,37 @@ const HomePage = ({ navigation }) => {
         }
 
         return (
-            <TouchableOpacity activeOpacity={1} onPress={() => navigateToJournalDetails(month, item.editionRef, item.releaseDateFormated, item.coverImage)}>
-                <View style={globalStyles.list_item}>
-                    <SafeAreaView style={globalStyles.safeAreaViewFlexCenterbackgroundWhite}>
-                        {item.coverImage == "null" || item.coverImage == "" ? (
-                            <ListDefaultImageBackgroundComponent month={month} year={year} />
-                        ) :
-                            <ListCoverImageBackgroundComponent signedUserUid={signedUserUid} coverImage={item.coverImage} month={month} year={year} />
-                        }
-                    </SafeAreaView>
-                </View>
-            </TouchableOpacity>
+            // <TouchableOpacity activeOpacity={1} onPress={() => navigateToJournalDetails(month, item.editionRef, item.releaseDateFormated, item.coverImage)}>
+            <View style={globalStyles.list_item}>
+                <SafeAreaView style={globalStyles.safeAreaViewFlexCenterbackgroundWhite}>
+                    {item.coverImage == "null" || item.coverImage == "" ? (
+                        <View>
+                            {item.archived == true ? (
+                                <TouchableOpacity activeOpacity={1} onPress={() => navigateToJournalPreview(month, item.editionRef, item.releaseDateFormated, item.coverImage)}>
+                                    <ListDefaultImageBackgroundComponentArchived month={month} year={year} />
+                                </TouchableOpacity>
+                            ) :
+                                <TouchableOpacity activeOpacity={1} onPress={() => navigateToJournalDetails(month, item.editionRef, item.releaseDateFormated, item.coverImage, item.daysLeft)}>
+                                    <ListDefaultImageBackgroundComponent month={month} year={year} />
+                                </TouchableOpacity>
+                            }
+                        </View>
+                    ) :
+                        <View>
+                            {item.archived == true ? (
+                                <TouchableOpacity activeOpacity={1} onPress={() => navigateToJournalPreview(month, item.editionRef, item.releaseDateFormated, item.coverImage)}>
+                                    <ListCoverImageBackgroundComponentArchived signedUserUid={signedUserUid} coverImage={item.coverImage} month={month} year={year} />
+                                </TouchableOpacity>
+                            ) :
+                                <TouchableOpacity activeOpacity={1} onPress={() => navigateToJournalDetails(month, item.editionRef, item.releaseDateFormated, item.coverImage, item.daysLeft)}>
+                                    <ListCoverImageBackgroundComponent signedUserUid={signedUserUid} coverImage={item.coverImage} month={month} year={year} />
+                                </TouchableOpacity>
+                            }
+                        </View>
+                    }
+                </SafeAreaView>
+            </View>
+            // </TouchableOpacity>
         );
     };
 
@@ -412,7 +454,7 @@ const HomePage = ({ navigation }) => {
                     </View>
 
                     {myJournalsList.length != 0 ? (
-                        <ContributorsDaysLeftComponent contributorsNb={contributorsNb} contributorss={contributorss} accessStatus={accessStatus} daysLeftFromDB={daysLeftFromDB} daysLeft={daysLeft} />
+                        <ContributorsDaysLeftComponent contributorsNb={contributorsNb} contributorss={contributorss}/>
                     ) :
                         <View style={globalStyles.row_div_homePage_contributorsDaysLeft}>
                         </View>
@@ -437,7 +479,7 @@ const HomePage = ({ navigation }) => {
                 <TouchableOpacity activeOpacity={0} style={globalStyles.viewFlex1} onPress={() => setModalStatus(false)}>
                     <View style={globalStyles.modalDivstyle}>
                         <View style={{ backgroundColor: '#ffffff', padding: 5, height: '25%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
-                            <View style={globalStyles.modalViewfullWidthPadding10}>
+                            <View style={globalStyles.modalViewCenter}>
                                 <View style={globalStyles.alignItemsCenter}>
                                     <View style={globalStyles.calendarModal_InputView}>
                                         <TextInput style={globalStyles.calendarModal_textInput} underlineColorAndroid="transparent" onChangeText={(text) => setJournalName(text)} placeholder={journalNameLabel} placeholderTextColor='#A5A5A5' />

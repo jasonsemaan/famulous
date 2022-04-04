@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, TextInput, Modal } from "react-native";
 import { globalStyles } from "../../../../Activities/03-constants/global";
 import SelectDropdown from 'react-native-select-dropdown'
@@ -13,11 +13,22 @@ import { constants } from "../../../03-constants/Constants";
 import { ModalConnection } from "../../02-components/ConnectionComponent";
 import { DeleteJournal, UpdateJournalName } from "../../03-providers/JournalProvider";
 import { UpdateCoverImage } from "../../03-providers/ImagesProvider";
+import { JournalContext } from "../../04-context/Context";
 
 const countries = ["Italic", "Bold", "Arial"]
 
 const SettingsPage = ({ route, navigation }) => {
-  var admin = route.params.admin
+  const myContext = useContext(JournalContext);
+  let [contextEditionRef, setContextEditionRef] = useState(myContext.EditionRef)
+  let [contextAccessStatus, setContextAccessStatus] = useState(myContext.accessStatus)
+  let [contextJournalRef, setContextJournalRef] = useState(myContext.JournalRef)
+  let [contextJournalName, setContextJournalName] = useState(myContext.JournalName)
+  let [contextCoverImage, setContextCoverImage] = useState(myContext.CoverImage)
+  let [contextAppLanguage, setContextAppLanguage] = useState(myContext.appLanguage)
+  let [contextToken, setContextToken] = useState(myContext.Token)
+  let [contextUserUid, setContextUserUid] = useState(myContext.UserUid)
+
+
   let [fontStyle, setFontStyle] = useState("Italic");
   let [imageSelected, setImageSelected] = useState('');
   let [modalStatus, setModalStatus] = useState(false)
@@ -80,13 +91,13 @@ const SettingsPage = ({ route, navigation }) => {
                   ? imageSelected
                   : imageSelected.replace("file://", "")
             })
-            data.append('editionRef', global.EditionRef)
+            data.append('editionRef', contextEditionRef)
             data.append('imgDescription', '')
             data.append('imgOrientation', '')
             data.append('imgDescriptionVisible', '')
             data.append('fullScreen', '')
             data.append('coverImage', true)
-            UpdateCoverImage(global.Token, data)
+            UpdateCoverImage(contextToken, data)
               .then((response) => response.json())
               .then(this.toast.show('Your Journal cover image has updated successfully', 2000), navigation.navigate("Root"))
               .catch((error) => { console.log(error) })
@@ -102,7 +113,7 @@ const SettingsPage = ({ route, navigation }) => {
   /** get params from async storage */
   const getAsyncStorageDataForNoConnection = async () => {
     try {
-      strings.setLanguage(global.appLanguage)
+      strings.setLanguage(contextAppLanguage)
       setNoInternetConnection(strings.noInternetConnection)
       setRefresh(strings.refresh)
     } catch (e) {
@@ -113,7 +124,7 @@ const SettingsPage = ({ route, navigation }) => {
   /** get params from async storage */
   const getAsyncStorageData = async () => {
     try {
-      strings.setLanguage(global.appLanguage)
+      strings.setLanguage(contextAppLanguage)
       setJournalSettings(strings.journalSettings)
       setEditJournalProfile(strings.editJournalProfile)
       setTitleOfJournal(strings.titleOfJournal)
@@ -137,8 +148,8 @@ const SettingsPage = ({ route, navigation }) => {
   /** function to check if the confirmation journal name is the same of the journal selected */
   const checkIfJournalNameCorrect = (confirmationJournalName) => {
     setModalStatus(false)
-    if (confirmationJournalName === global.JournalName && confirmationJournalName != '') {
-      deleteJournalFromDB(global.JournalRef)
+    if (confirmationJournalName === contextJournalName && confirmationJournalName != '') {
+      deleteJournalFromDB(contextJournalRef)
     } else {
       this.toast.show(pleasetypeavalidjournalname, 2000);
     }
@@ -162,7 +173,7 @@ const SettingsPage = ({ route, navigation }) => {
   /** update Journal Name */
   const updateJournalName = () => {
     setLoading(true)
-    UpdateJournalName(global.JournalRef, currentJournalName)
+    UpdateJournalName(contextJournalRef, currentJournalName)
       .then((response) => response.json())
       .then(navigation.navigate("Root"))
       .catch((error) => { console.log(error) })
@@ -191,7 +202,7 @@ const SettingsPage = ({ route, navigation }) => {
       />
     } else {
       return <Image
-        source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + global.UserUid + "/" + global.CoverImage }}
+        source={{ uri: constants.apiIP + "download/byuser/bypath?path=" + contextUserUid + "/" + contextCoverImage }}
         style={globalStyles.coverImage_uploadRoundedImage}
       />
     }
@@ -211,7 +222,7 @@ const SettingsPage = ({ route, navigation }) => {
   }
 
   useEffect(() => {
-    setCurrentJournalName(global.JournalName)
+    setCurrentJournalName(contextJournalName)
     checkConnection();
     return () => {
     }
@@ -230,7 +241,7 @@ const SettingsPage = ({ route, navigation }) => {
             <View style={globalStyles.main_headerDiv_backandtitle}>
               <View style={globalStyles.subHeaderViewbackgroundYellow}>
                 <View style={globalStyles.headerGlobalLeftRightView}>
-                  <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings', { adminName: admin })}>
+                  <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalSettings')}>
                     <View style={{ padding: 8 }}>
                       <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                     </View>
@@ -246,10 +257,10 @@ const SettingsPage = ({ route, navigation }) => {
         </ImageBackground>
       </View>
       <View style={{ flex: 3, alignItems: 'center' }}>
-        {global.accessStatus == 0 ? (
+        {contextAccessStatus == 0 ? (
           <View>
             <TouchableOpacity activeOpacity={0.8} onPress={() => openGallery()}>
-              {global.CoverImage == "null" || global.CoverImage == "" ? (
+              {contextCoverImage == "null" || contextCoverImage == "" ? (
                 renderFileUri()
               ) :
                 renderFileUriIfCoverExist()
@@ -304,7 +315,7 @@ const SettingsPage = ({ route, navigation }) => {
         </ScrollView>
       </View>
 
-      {global.accessStatus == 0 ? (
+      {contextAccessStatus == 0 ? (
         <View style={globalStyles.settingDeleteBtnViewStyle}>
           <TouchableOpacity activeOpacity={0.8} onPress={() => setModalStatus(true)}>
             <View style={globalStyles.settingsPage_button}>
@@ -320,10 +331,10 @@ const SettingsPage = ({ route, navigation }) => {
           <View style={globalStyles.modalDivstyle}>
             <View style={globalStyles.settingsModalView}>
               <View style={globalStyles.modalViewfullWidthPadding10}>
-                <Text style={globalStyles.deleteJournal_confirmationTitle_desc}>{youaregoingtoremove} {global.JournalName} {removedJournalCannotbeRestored}</Text>
+                <Text style={globalStyles.deleteJournal_confirmationTitle_desc}>{youaregoingtoremove} {contextJournalName} {removedJournalCannotbeRestored}</Text>
                 <View style={globalStyles.flexRow}>
                   <Text style={globalStyles.deleteJournal_confirmationTitle}>{pleaseType}</Text>
-                  <Text style={globalStyles.deleteJournal_journalNamewithbackground}>{global.JournalName}</Text>
+                  <Text style={globalStyles.deleteJournal_journalNamewithbackground}>{contextJournalName}</Text>
                   <Text style={globalStyles.deleteJournal_confirmationTitle2}>{toProceedorClose}</Text>
                 </View>
                 <View style={globalStyles.alignItemsCenter}>
@@ -333,7 +344,7 @@ const SettingsPage = ({ route, navigation }) => {
                     </View>
                   </View>
                 </View>
-                <View>
+                <View style={{alignSelf:'center'}}>
                   <TouchableOpacity activeOpacity={0.8} onPress={() => checkIfJournalNameCorrect(confirmJournalName)}>
                     <View style={globalStyles.deleteJournal_button_style}>
                       <Text style={globalStyles.Wel_Log_buttonLabel}>{deleteLabel}</Text>
@@ -345,7 +356,7 @@ const SettingsPage = ({ route, navigation }) => {
           </View>
         </TouchableOpacity>
       </Modal>
-      <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh}/>
+      <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={checkConnection} refresh={refresh} />
       <Toast ref={(toast) => this.toast = toast}
         style={{ borderRadius: 20 }}
         fadeInDuration={500}

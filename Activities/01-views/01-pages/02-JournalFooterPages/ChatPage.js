@@ -12,7 +12,6 @@ var jsonData = [
 ]
 
 const ChatPage = ({ route, navigation }) => {
-    var adminName = route.params.adminName
 
     const _renderItem = ({ item }) => {
 
@@ -35,7 +34,7 @@ const ChatPage = ({ route, navigation }) => {
                         <View style={globalStyles.main_headerDiv_backandtitle}>
                             <View style={globalStyles.subHeaderViewbackgroundYellow}>
                                 <View style={globalStyles.headerGlobalLeftRightView}>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails', { admin: adminName })}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('JournalDetails')}>
                                         <View style={{ padding: 8 }}>
                                             <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
                                         </View>

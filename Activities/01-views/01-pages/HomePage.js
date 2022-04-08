@@ -57,6 +57,7 @@ const HomePage = ({ navigation }) => {
     let [noInternetConnection, setNoInternetConnection] = useState("No Internet connection");
     let [refresh, setRefresh] = useState("Refresh");
     let [checkyourconnectionthenrefreshthepage, setCheckyourconnectionthenrefreshthepage] = useState("Check your connection, then refresh the page");
+    let [addyourownjournal, setAddyourownjournal] = useState("Add your own journal")
 
     let contributorss = contributorsNb == 1 ? contributor : contributors
 
@@ -108,6 +109,7 @@ const HomePage = ({ navigation }) => {
             setNoInternetConnection(strings.noInternetConnection)
             setRefresh(strings.refresh)
             setCheckyourconnectionthenrefreshthepage(strings.checkyourconnectionthenrefreshthepage)
+            setAddyourownjournal(strings.addyourownjournal)
         } catch (e) {
             console.log(e)
         }
@@ -347,6 +349,7 @@ const HomePage = ({ navigation }) => {
 
     useEffect(() => {
         checkConnection(0)
+        // setTimeout(() => this.flatListRef.scrollToIndex({ index: 3 }),2000);
         BackHandler.addEventListener("hardwareBackPress", backAction);
         return () =>
             BackHandler.removeEventListener("hardwareBackPress", backAction);
@@ -463,6 +466,7 @@ const HomePage = ({ navigation }) => {
                     <View style={globalStyles.home_list_div}>
                         <SafeAreaView style={globalStyles.viewFlex1}>
                             {myJournalsList.length != 0 ? (
+                                // ref={(ref) => this.flatListRef = ref}
                                 <FlatList showsVerticalScrollIndicator={false} data={journalEditionsList} renderItem={_renderItem} />
                             ) :
                                 <NoJournalsComponent noJournals={youhavenojournalsatthismoment} addWithBtn={addJournalswiththeplusButton} />
@@ -481,6 +485,12 @@ const HomePage = ({ navigation }) => {
                         <View style={{ backgroundColor: '#ffffff', padding: 5, height: '25%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
                             <View style={globalStyles.modalViewCenter}>
                                 <View style={globalStyles.alignItemsCenter}>
+                                <View style={{ marginBottom: 10, flexDirection: 'row'}}>
+                                        <Image source={require('../../assets/paper.png')} style={{ width: 15, height: 15,marginRight:10 }} />
+                                        <Text style={{ color: 'black', fontSize: 12 }}>
+                                            {addyourownjournal}
+                                        </Text>
+                                    </View>
                                     <View style={globalStyles.calendarModal_InputView}>
                                         <TextInput style={globalStyles.calendarModal_textInput} underlineColorAndroid="transparent" onChangeText={(text) => setJournalName(text)} placeholder={journalNameLabel} placeholderTextColor='#A5A5A5' />
                                     </View>

@@ -11,7 +11,8 @@ import auth, { firebase } from '@react-native-firebase/auth';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { constants } from "../../03-constants/Constants";
 import { ModalConnection } from "../02-components/ConnectionComponent";
-import { DeleteImage, GetSingleEditionImages, updateImageDescription } from "../03-providers/ImagesProvider";
+import { changeImgOrder, DeleteImage, GetSingleEditionImages, updateImageDescription } from "../03-providers/ImagesProvider";
+import { SingleImageEnable, FullScreenImageEnable, SingleImageDisable, FullScreenImageDisable } from "../02-components/JournalSortingComponent";
 import { JournalContext } from "../04-context/Context";
 
 const JournalSorting = ({ route, navigation }) => {
@@ -39,6 +40,11 @@ const JournalSorting = ({ route, navigation }) => {
     let [addphotostopreviewthejournal, setAddphotostopreviewthejournal] = useState("Add photos to preview the journal.")
     let [noInternetConnection, setNoInternetConnection] = useState("No Internet connection");
     let [refresh, setRefresh] = useState("Refresh");
+    let [editImageDescription, setEditImageDescription] = useState("Edit image description")
+    let [by, setBy] = useState("By")
+    let [fullScreenLabel, setFullScreenLabel] = useState("FULL SCREEN")
+
+
 
     /** get the tokenID */
     const getTokenId = () => {
@@ -78,6 +84,9 @@ const JournalSorting = ({ route, navigation }) => {
             setAddphotostopreviewthejournal(strings.addphotostopreviewthejournal)
             setNoInternetConnection(strings.noInternetConnection)
             setRefresh(strings.refresh)
+            setEditImageDescription(strings.editImageDescription)
+            setBy(strings.by)
+            setFullScreenLabel(strings.fullScreenLabel)
             getJournalEditionImages(idToken, contextEditionRef)
         } catch (e) {
             console.log(e)
@@ -95,7 +104,10 @@ const JournalSorting = ({ route, navigation }) => {
 
     /** function to store response of the backend api into a current list */
     const storeData = (responseJson) => {
-        setImagesList(responseJson)
+        const sortedList = responseJson.sort(function (obj1, obj2) {
+            return obj1.imgOrder - obj2.imgOrder;
+        });
+        setImagesList(sortedList)
         setLoading(false)
     }
 
@@ -151,10 +163,16 @@ const JournalSorting = ({ route, navigation }) => {
     const updateImageDesc = () => {
         updateImageDescription(selectedImageRef, selectedImageDescription)
             .then((response) => response.json())
-            .then(getTokenId(),setModalStatus(false))
+            .then(getTokenId(), setModalStatus(false))
             .catch((error) => { console.log(error) })
     }
 
+    const sendSortedListToDB = () => {
+        changeImgOrder(imagesList)
+            .then((response) => response.json())
+            .then((response) => getTokenId())
+            .catch((error) => { console.log(error) })
+    }
 
     /** function to check if internet connection is enable or not */
     const checkConnection = () => {
@@ -170,13 +188,11 @@ const JournalSorting = ({ route, navigation }) => {
         });
     }
 
-
     useEffect(() => {
         checkConnection();
         return () => {
         }
     }, [])
-
 
     /** render the main flatlist items view */
     const renderItem = ({ item, drag, isActive, index }) => {
@@ -187,10 +203,8 @@ const JournalSorting = ({ route, navigation }) => {
         );
     };
 
-
     /** function to seperate flatlist items, >30 and <=30 */
     const two_perRow = (item, drag, isActive, index) => {
-
         let noDesc = "No description"
         let desc = item.imgDescription
         let description = item.imgDescriptionVisible == false ? noDesc : desc
@@ -199,85 +213,82 @@ const JournalSorting = ({ route, navigation }) => {
         if (index <= 29) {
             return (
                 <View>
-                    <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
-                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', margin: 2, borderBottomWidth: 0.5, borderColor: '#D5D5D5', padding: 10, marginBottom: 5 }}>
-                            <View style={{ width: '20%' }}>
-                                <FastImage
-                                    style={globalStyles.sorting_ItemImg}
-                                    source={{
-                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.contributerUid + "/" + item.imgPath,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </View>
-                            <View style={{ width: '60%' }}>
-                                <Text style={{ fontSize: 10, marginTop: 3, color: 'black' }}>By {item.contributorName}</Text>
-                                <Text style={{ fontSize: 10, color: 'grey', marginTop: 3 }}>{description.substring(0, 50)}</Text>
-                                <Text style={{ fontSize: 9, color: 'grey', marginTop: 3 }}>{imageDate}</Text>
-                                {item.fullScreen == true ? (
-                                    <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                        <Image source={require('../../assets/star.png')} style={{ width: 10, height: 10 }} />
-                                        <Text style={{ fontSize: 9, color: 'grey', marginLeft: 3 }}>FULL SCREEN / {item.imgOrientation}</Text>
-                                    </View>
-                                ) : <View style={{ flexDirection: 'row', marginTop: 3 }}>
-                                    <Image source={require('../../assets/star.png')} style={{ width: 10, height: 10 }} />
-                                    <Text style={{ fontSize: 9, color: 'grey', marginLeft: 3 }}>{item.imgOrientation}</Text>
-                                </View>
-                                }
-                            </View>
-                            <View style={{ width: '10%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 10, marginRight: 5 }}>
-                                <TouchableOpacity onPress={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}>
-                                    <Image source={require('../../assets/edit.png')} style={{ width: 25, height: 25 }} />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ width: '10%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-                                <TouchableOpacity onPress={() => alertRemove(item.imgStoreRef)}>
-                                    <Image source={require('../../assets/delete.png')} style={{ width: 25, height: 25 }} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                    {item.fullScreen === false ? (
+                        <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
+                            <SingleImageEnable contributerUid={item.contributerUid}
+                                imgPath={item.imgPath}
+                                by={by}
+                                contributorName={item.contributorName}
+                                description={description.substring(0, 50)} i
+                                imageDate={imageDate}
+                                fullScreenLabel={fullScreenLabel}
+                                imgOrientation={item.imgOrientation}
+                                fullScreen={item.fullScreen}
+                                imgDescriptionVisible={item.imgDescriptionVisible}
+                                openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
+                                alertRemove={() => alertRemove(item.imgStoreRef)}
+                            />
+                        </TouchableOpacity>
+                    ) :
+                        <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
+                            <FullScreenImageEnable contributerUid={item.contributerUid}
+                                imgPath={item.imgPath}
+                                by={by}
+                                contributorName={item.contributorName}
+                                description={description.substring(0, 50)} i
+                                imageDate={imageDate}
+                                fullScreenLabel={fullScreenLabel}
+                                imgOrientation={item.imgOrientation}
+                                fullScreen={item.fullScreen}
+                                imgDescriptionVisible={item.imgDescriptionVisible}
+                                openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
+                                alertRemove={() => alertRemove(item.imgStoreRef)}
+                            />
+                        </TouchableOpacity>
+                    }
                 </View>
             )
         } else if (index > 29) {
             return (
                 <View>
-                    <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
-                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', margin: 2, borderBottomWidth: 0.5, borderColor: '#D5D5D5', padding: 10, marginBottom: 5, backgroundColor: 'lightgrey' }}>
-                            <View style={{ width: '20%' }}>
-                                <FastImage
-                                    style={globalStyles.sorting_ItemImg}
-                                    source={{
-                                        uri: constants.apiIP + "download/byuser/bypath?path=" + item.contributerUid + "/" + item.imgPath,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </View>
-                            <View style={{ width: '70%' }}>
-                                <Text style={{ fontSize: 10 }}>{description.substring(0, 50)}</Text>
-                                <Text style={{ fontSize: 9, color: 'grey', marginTop: 3 }}>{imageDate}</Text>
-                                {item.fullScreen == true ? (
-                                    <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                        <Image source={require('../../assets/star.png')} style={{ width: 10, height: 10 }} />
-                                        <Text style={{ fontSize: 9, color: 'grey', marginLeft: 3 }}>Full screen / {item.imgOrientation}</Text>
-                                    </View>
-                                ) : <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                    <Image source={require('../../assets/star.png')} style={{ width: 10, height: 10 }} />
-                                    <Text style={{ fontSize: 9, color: 'grey', marginLeft: 3 }}>{item.imgOrientation}</Text>
-                                </View>
-                                }
-                            </View>
-                            <View style={{ width: '10%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <TouchableOpacity onPress={() => alertRemove(item.imgStoreRef)}>
-                                    <Image source={require('../../assets/delete.png')} style={{ width: 25, height: 25 }} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                    {item.fullScreen === false ? (
+                        <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
+                            <SingleImageDisable contributerUid={item.contributerUid}
+                                imgPath={item.imgPath}
+                                by={by}
+                                contributorName={item.contributorName}
+                                description={description.substring(0, 50)} i
+                                imageDate={imageDate}
+                                fullScreenLabel={fullScreenLabel}
+                                imgOrientation={item.imgOrientation}
+                                fullScreen={item.fullScreen}
+                                imgDescriptionVisible={item.imgDescriptionVisible}
+                                openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
+                                alertRemove={() => alertRemove(item.imgStoreRef)}
+                            />
+                        </TouchableOpacity>
+                    ) :
+                        <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
+                            <FullScreenImageDisable contributerUid={item.contributerUid}
+                                imgPath={item.imgPath}
+                                by={by}
+                                contributorName={item.contributorName}
+                                description={description.substring(0, 50)} i
+                                imageDate={imageDate}
+                                fullScreenLabel={fullScreenLabel}
+                                imgOrientation={item.imgOrientation}
+                                fullScreen={item.fullScreen}
+                                imgDescriptionVisible={item.imgDescriptionVisible}
+                                openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
+                                alertRemove={() => alertRemove(item.imgStoreRef)}
+                            />
+                        </TouchableOpacity>
+                    }
                 </View>
             )
         }
     }
+
 
     return (
         <View style={globalStyles.JournalSorting_main_Container}>
@@ -306,17 +317,17 @@ const JournalSorting = ({ route, navigation }) => {
                             keyExtractor={(item) => item.imgStoreRef}
                             renderItem={renderItem}
                         />
-                        {/* <View style={{
+                        <View style={{
                             alignSelf: 'center',
                             position: 'absolute',
                             bottom: 40,
                         }}>
-                            <TouchableOpacity activeOpacity={0.8} onPress={() => console.log(imagesList)}>
+                            <TouchableOpacity activeOpacity={0.8} onPress={() => sendSortedListToDB()}>
                                 <View style={globalStyles.SortingSave_button}>
                                     <Text style={globalStyles.Wel_Log_buttonLabel}>{save}</Text>
                                 </View>
                             </TouchableOpacity>
-                        </View> */}
+                        </View>
                     </View>
                 ) :
                     <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
@@ -339,6 +350,12 @@ const JournalSorting = ({ route, navigation }) => {
                         <View style={{ backgroundColor: '#ffffff', padding: 5, height: '25%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
                             <View style={globalStyles.modalViewCenter}>
                                 <View style={globalStyles.alignItemsCenter}>
+                                    <View style={{ marginBottom: 10, flexDirection: 'row' }}>
+                                        <Image source={require('../../assets/edit.png')} style={{ width: 15, height: 15, marginRight: 10 }} />
+                                        <Text style={{ color: 'black', fontSize: 12 }}>
+                                            {editImageDescription}
+                                        </Text>
+                                    </View>
                                     <View style={globalStyles.calendarModal_InputView}>
                                         <TextInput style={globalStyles.calendarModal_textInput} underlineColorAndroid="transparent" defaultValue={selectedImageDescription} onChangeText={(text) => setSelectedImageDescription(text)} placeholderTextColor='#A5A5A5' />
                                     </View>

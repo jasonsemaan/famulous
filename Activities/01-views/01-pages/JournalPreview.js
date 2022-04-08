@@ -347,7 +347,7 @@ const JournalFooterPage = () => {
                                 <View style={{ marginTop: 10, alignItems: 'center' }}>
                                     <View style={globalStyles.flexRow}>
                                         <Text style={{ fontSize: 11, color: 'black', width: '30%' }}>{item.userName}</Text>
-                                        <Text style={{ fontSize: 11, color: '#5ec6ca', width: '30%' }}>{item.eventDate}</Text>
+                                        <Text style={{ fontSize: 11, color: '#5ec6ca', width: '30%',textAlign:'center' }}>{item.eventDate}</Text>
                                         <Text style={{ fontSize: 11, color: '#F25278', width: '30%' }}>{item.eventDescription}</Text>
                                     </View>
                                 </View>

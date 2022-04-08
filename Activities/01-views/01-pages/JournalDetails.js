@@ -74,6 +74,8 @@ const JournalDetails = ({ route, navigation }) => {
     let [noInternetConnection, setNoInternetConnection] = useState("No Internet connection");
     let [refresh, setRefresh] = useState("Refresh");
     let [chooseyourimagelayout, setChooseyourimagelayout] = useState("Choose your image layout");
+    let [fullScreenLabel, setFullScreenLabel] = useState("FULL SCREEN")
+
 
     /** function to change view by index of layout selected in the horizontal flatlist */
     const toggleLayoutView = (value) => {
@@ -271,6 +273,7 @@ const JournalDetails = ({ route, navigation }) => {
             setNoInternetConnection(strings.noInternetConnection)
             setRefresh(strings.refresh)
             setChooseyourimagelayout(strings.chooseyourimagelayout)
+            setFullScreenLabel(strings.fullScreenLabel)
         } catch (e) {
             console.log(e)
         }
@@ -362,7 +365,7 @@ const JournalDetails = ({ route, navigation }) => {
                         <PortraitFullDescription portraitFullDescStatus={portraitFullDescStatus} />
                     </TouchableOpacity>
                     <View style={globalStyles.alignItemsCenter}>
-                        <Text style={globalStyles.detailsYellowFullScreenLabel}>Full Screen</Text>
+                        <Text style={globalStyles.detailsYellowFullScreenLabel}>{fullScreenLabel}</Text>
                     </View>
                 </View>
             )
@@ -373,7 +376,7 @@ const JournalDetails = ({ route, navigation }) => {
                         <PortraitFullNoDescription portraitFullStatus={portraitFullStatus} />
                     </TouchableOpacity>
                     <View style={globalStyles.alignItemsCenter}>
-                        <Text style={globalStyles.detailsYellowFullScreenLabel}>Full Screen</Text>
+                        <Text style={globalStyles.detailsYellowFullScreenLabel}>{fullScreenLabel}</Text>
                     </View>
                 </View>
             )

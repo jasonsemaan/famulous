@@ -2011,6 +2011,12 @@ export const globalStyles = StyleSheet.create({
     },
     previewFooterPageItemListView:{
         width: 250, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15
+    },
+    flexRowMargintop5:{
+         flexDirection: 'row', marginTop: 5 
+    },
+    journalSortGreyLabel:{
+        fontSize: 9, color: 'grey', marginLeft: 3 
     }
 
 })

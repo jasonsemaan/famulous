@@ -64,3 +64,15 @@ export const UpdateCoverImage = (idToken, data) => fetch(constants.apiIP + "jour
         description: newDescription
     })
 })
+
+
+export const changeImgOrder = (imagesList) => fetch(constants.apiIP + "journal/changeImgOrder", {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        imgStoreDtoList: imagesList,
+    })
+})

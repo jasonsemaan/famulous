@@ -187,6 +187,11 @@ export default {
     hereYouCanSort: "Here you can sort images of",
     remove: "Remove",
     areyousureyouwanttoremove: "Are you sure you want to remove this image?",
+    editImageDescription:"Edit image description",
+    addyourownjournal:"Add your own journal",
+    fullScreenLabel:"FULL SCREEN",
+    by:"By",
+
 
     //JournalPreview
     youhaveNoPhotosatThisMoment:"You have no photos at this moment!!",

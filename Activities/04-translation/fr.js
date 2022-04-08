@@ -7,7 +7,7 @@ export default {
     otherJournals: "Journaux Invitées",
     youhavenojournalsatthismoment: "Vous n'avez pas de journaux en ce moment!!",
     addJournalswiththeplusButton: "Ajouter des journaux avec le bouton +",
-    addJournal:"Ajouter un journal",
+    addJournal:"Ajouter",
     noJournals:"Aucun journal",
     noInternetConnection:"Pas de connexion Internet",
     refresh:"Rafraîchir",
@@ -55,7 +55,7 @@ export default {
     pleaseType: "Veuillez saisir",
     toProceedorClose: "pour continuer ou fermer pour annuler.",
     delete: "Supprimer",
-    journalName:"Nom de la revue",
+    journalName:"Nom de la journal",
     thejournalhassuccessfullydeleted: "Le journal a été supprimé avec succès",
     pleasetypeavalidjournalname: "Veuillez saisir un nom de revue valide",
     submit: "Soumettre",
@@ -187,6 +187,10 @@ export default {
     hereYouCanSort: "Ici, vous pouvez trier les images de",
     remove: "Supprimer",
     areyousureyouwanttoremove: "Êtes-vous sûr de supprimer cette image?",
+    editImageDescription:"Modifier la description de l'image",
+    addyourownjournal:"Ajoutez votre propre journal",
+    fullScreenLabel:"PLEIN ÉCRAN",
+    by:"Par",
 
     //JournalPreview
     youhaveNoPhotosatThisMoment: "Vous n'avez pas de photos pour le moment!!",

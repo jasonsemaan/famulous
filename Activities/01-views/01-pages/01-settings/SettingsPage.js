@@ -14,6 +14,7 @@ import { ModalConnection } from "../../02-components/ConnectionComponent";
 import { DeleteJournal, UpdateJournalName } from "../../03-providers/JournalProvider";
 import { UpdateCoverImage } from "../../03-providers/ImagesProvider";
 import { JournalContext } from "../../04-context/Context";
+import ImageResizer from "react-native-image-resizer";
 
 const countries = ["Italic", "Bold", "Arial"]
 
@@ -55,6 +56,19 @@ const SettingsPage = ({ route, navigation }) => {
   let [noInternetConnection, setNoInternetConnection] = useState("No Internet connection");
   let [refresh, setRefresh] = useState("Refresh");
 
+  let [mode, setMode] = useState('contain')
+  let [onlyScaleDown, setOnlyScaleDown] = useState(false)
+
+  const resizeImg = (imageSelected) => {
+    ImageResizer.createResizedImage(imageSelected, 1024, 1024, 'JPEG', 90, 0, undefined, false, { mode, onlyScaleDown })
+      .then(response => {
+        setImageSelected(response.uri)
+      })
+      .catch(err => {
+        console.log("ERROR: ", err)
+      });
+  }
+
   /** function to open the mobile gallery and pick an image */
   const openGallery = () => {
     let options = {
@@ -71,10 +85,12 @@ const SettingsPage = ({ route, navigation }) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        setImageSelected(response.assets[0].uri)
+        resizeImg(response.assets[0].uri)
       }
     });
   }
+
+
 
   /** this function call backend api to upload the journal edition cover image into database */
   const uploadCoverImagetoJournalEdition = () => {
@@ -270,7 +286,9 @@ const SettingsPage = ({ route, navigation }) => {
 
             {imageSelected != "" ? (
               <TouchableOpacity onPress={() => uploadCoverImagetoJournalEdition()}>
-                <Text style={globalStyles.settingsSubmitLabel}>{submit}</Text>
+                <View style={globalStyles.submit_button_style}>
+                  <Text style={globalStyles.Wel_Log_buttonLabel}>{submit}</Text>
+                </View>
               </TouchableOpacity>
             ) : null}
           </View>
@@ -292,7 +310,7 @@ const SettingsPage = ({ route, navigation }) => {
               </View>
             </View>
 
-            <Text style={globalStyles.settingsPage_titleInput}>{titlesFonts}</Text>
+            {/* <Text style={globalStyles.settingsPage_titleInput}>{titlesFonts}</Text>
             <View style={globalStyles.settingsPage_dropdown}>
               <SelectDropdown
                 buttonStyle={{ backgroundColor: 'white', borderColor: '#D5D5D5', borderWidth: 0.5, borderRadius: 5, width: '100%', height: 37 }}
@@ -310,7 +328,7 @@ const SettingsPage = ({ route, navigation }) => {
                 }}
               />
               <Image style={globalStyles.journalSettings_next_icon} source={require('../../../assets/bottom_arrow.jpeg')} />
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </View>
@@ -344,7 +362,7 @@ const SettingsPage = ({ route, navigation }) => {
                     </View>
                   </View>
                 </View>
-                <View style={{alignSelf:'center'}}>
+                <View style={{ alignSelf: 'center' }}>
                   <TouchableOpacity activeOpacity={0.8} onPress={() => checkIfJournalNameCorrect(confirmJournalName)}>
                     <View style={globalStyles.deleteJournal_button_style}>
                       <Text style={globalStyles.Wel_Log_buttonLabel}>{deleteLabel}</Text>

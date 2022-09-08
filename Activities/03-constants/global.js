@@ -442,7 +442,7 @@ export const globalStyles = StyleSheet.create({
     journalSettings_label: {
         color: 'grey',
         marginLeft: 10,
-        fontSize: 14
+        fontSize: 14,
     },
     journalSettings_lefticon: {
         width: 30,
@@ -573,7 +573,7 @@ export const globalStyles = StyleSheet.create({
     ShippingAddress_AllinfoView: {
         flex: 1, marginLeft: 30, marginRight: 30, borderRadius: 10, shadowColor: 'black', marginTop: 20, marginBottom: 20,
         shadowOffset: { width: 0, height: 1 }, shadowRadius: 2,
-        shadowOpacity: 0.6, elevation: 4, 
+        shadowOpacity: 0.6, elevation: 4,
         backgroundColor: 'white',
         padding: 15,
     },
@@ -591,6 +591,9 @@ export const globalStyles = StyleSheet.create({
     },
     ShippingAddress_inputText: {
         alignSelf: 'center', height: 35, marginLeft: 10, padding: 0, fontSize: 12, color: 'black',
+    },
+    desc_inputText: {
+        alignSelf: 'center', height: '100%', marginLeft: 10, padding: 0, fontSize: 12, color: 'black',
     },
     ShippingAddress_inputText_3sur4: {
         display: 'flex',
@@ -1079,6 +1082,12 @@ export const globalStyles = StyleSheet.create({
     howitworks_single_view: {
         width: '100%', marginTop: 20, alignItems: 'center'
     },
+    howitworks_single_viewTop: {
+        width: '100%', marginTop: 40, alignItems: 'center'
+    },
+    howitworks_single_2: {
+        width: '100%', alignItems: 'center'
+    },
     howitworks_single_view_noMargins: {
         width: '100%', alignItems: 'center'
     },
@@ -1296,6 +1305,9 @@ export const globalStyles = StyleSheet.create({
     main_headerDiv_titlestyle: {
         color: 'white', fontSize: 20, fontWeight: '600'
     },
+    main_headerDiv_titlestyle2: {
+        color: 'white', fontSize: 20, fontWeight: '600', marginTop: 15
+    },
     header_globalbackicon: {
         width: 25, height: 25, marginLeft: 20
     },
@@ -1324,6 +1336,10 @@ export const globalStyles = StyleSheet.create({
     },
     portrait_width50: {
         width: '55%',
+    },
+    flexWidth100: {
+        flex: 1,
+        width: '100%'
     },
 
     portrait_width100: {
@@ -1354,9 +1370,18 @@ export const globalStyles = StyleSheet.create({
     portrait_image_style: {
         width: '100%',
         height: '100%',
-        resizeMode: 'cover',
+        resizeMode: 'contain',
     },
     journal_upload_item_view_landscape: {
+        flex: 1,
+        marginTop: 15,
+        marginRight: 10,
+        marginLeft: 10,
+        marginBottom: 5,
+        height: 350,
+        backgroundColor: 'white',
+    },
+    journal_upload_item_view_descriptionOnly: {
         flex: 1,
         marginTop: 15,
         marginRight: 20,
@@ -1366,6 +1391,8 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: 'white',
         borderWidth: 1,
         borderColor: '#febf2e',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     landscape_width50: {
         width: '100%',
@@ -1374,6 +1401,10 @@ export const globalStyles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     landscape_width50_column_withoutDesc: {
+        width: '100%',
+        height: 220,
+    },
+    landscape_width50_column_withoutDesc_DescriptionOnly: {
         width: '100%',
         height: 220,
     },
@@ -1389,6 +1420,11 @@ export const globalStyles = StyleSheet.create({
     },
     landscape_width100_preview_withoutDesc: {
         width: 300,
+    },
+    landscape_width100_preview_withoutDesc_DescriptionOnly: {
+        width: 300,
+        height: 100,
+        justifyContent: 'center',
     },
     landscape_image_style: {
         width: '100%',
@@ -1417,7 +1453,13 @@ export const globalStyles = StyleSheet.create({
     },
     journal_text_styles_description_grey: {
         fontSize: 9,
-        color: 'grey'
+        color: 'grey',
+    },
+    journal_text_styles_description_purple_Preview: {
+        fontSize: 9,
+        color: '#9b56a2',
+        alignSelf: 'center',
+        fontWeight: 'bold'
     },
     journal_text_styles_date: {
         fontSize: 9,
@@ -1436,7 +1478,7 @@ export const globalStyles = StyleSheet.create({
     JournalPreview_pageStyle: {
         alignSelf: 'center',
         width: '90%',
-        height: 550,
+        height: 450,
         padding: 30,
         alignItems: 'center',
         backgroundColor: 'white',
@@ -1449,7 +1491,7 @@ export const globalStyles = StyleSheet.create({
     JournalPreview_pageStyle_MainPage: {
         alignSelf: 'center',
         width: '90%',
-        height: 550,
+        height: 450,
         alignItems: 'center',
         backgroundColor: 'white',
         shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
@@ -1461,7 +1503,7 @@ export const globalStyles = StyleSheet.create({
     JournalPreview_pageStyle_FooterPage: {
         alignSelf: 'center',
         width: '90%',
-        height: 550,
+        height: 450,
         alignItems: 'center',
         backgroundColor: 'white',
         shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
@@ -1498,10 +1540,9 @@ export const globalStyles = StyleSheet.create({
     },
     JournalPreview_main_Container: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
     },
     JournalPreview_famulous_logo: {
         width: 60,
@@ -1509,8 +1550,8 @@ export const globalStyles = StyleSheet.create({
         resizeMode: 'contain',
     },
     JournalPreview_famulous_logo_MainPage: {
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 35,
         resizeMode: 'contain',
     },
     upload_button_style: {
@@ -1524,6 +1565,17 @@ export const globalStyles = StyleSheet.create({
         marginTop: 10,
         alignSelf: 'flex-start',
         marginLeft: 20
+    },
+    submit_button_style: {
+        display: 'flex',
+        width: 120,
+        height: 40,
+        backgroundColor: '#5ec6ca',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        alignSelf: 'flex-start',
     },
     upload_button_style_disable: {
         display: 'flex',
@@ -1581,11 +1633,13 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: '#F25278',
     },
     backArrow: { width: 25, height: 25, marginLeft: 10 },
+    backArrow2: { width: 25, height: 25, marginLeft: 10, marginTop: 15 },
+
     sorting_ItemImg: {
         width: 60, height: 60, borderRadius: 2
     },
     sorting_ItemImg_fullScreen: {
-        width: 60, height: 90, borderRadius: 2
+        width: 60, height: 100, borderRadius: 2
     },
     JournalSorting_main_Container: {
         flex: 1,
@@ -1685,7 +1739,7 @@ export const globalStyles = StyleSheet.create({
     imageLayout_landscapeWithDesc_Selected: {
         flex: 1, width: 120, height: 120, padding: 5, alignItems: 'center',
         backgroundColor: 'white',
-        shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, 
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
         shadowRadius: 4, shadowOpacity: 0.1, elevation: 2,
         margin: 20,
         borderRadius: 2,
@@ -1715,24 +1769,24 @@ export const globalStyles = StyleSheet.create({
         shadowOpacity: 0.1, elevation: 1, marginTop: 10
     },
     journalDetails_PortraitImageFullScreen_divDesc: {
-        width: '75%', 
-        height: 360, 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        backgroundColor: 'white', 
-        alignSelf: 'center', 
-        shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, 
+        width: '75%',
+        height: 360,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        alignSelf: 'center',
+        shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
         shadowRadius: 2, shadowOpacity: 0.1, elevation: 1, marginTop: 10
     },
 
     journalDetails_LandscapeImageFullScreen_divDesc: {
-        width: '95%', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        backgroundColor: 'white',
-        alignSelf: 'center', 
+        width: '95%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+        alignSelf: 'center',
         shadowColor: 'black', shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2, shadowOpacity: 0.1, elevation: 1, margin: 10
+        shadowRadius: 2, shadowOpacity: 0.1, elevation: 1, margin: 10,borderRadius:15
     },
 
     journal_Preview_portraitFullScreen: {
@@ -1759,14 +1813,22 @@ export const globalStyles = StyleSheet.create({
     modalSubDivstyle: {
         backgroundColor: '#ffffff', padding: 5, height: '10%', borderRadius: 10, alignItems: 'center', marginBottom: 50, marginLeft: 10, marginRight: 10
     },
+    modalSubDivstyleFull: {
+        backgroundColor: '#ffffff', height: '90%', borderRadius: 10,
+    },
     modalSubDivstyle2: {
         flex: 1, width: '100%', justifyContent: 'center', padding: 10, alignItems: 'center'
     },
     modalSubDivstyle3: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'
     },
+
+
     viewRowAlignCenter: {
         flexDirection: 'row', alignItems: 'center'
+    },
+    viewRowAlignCenterMarginTop: {
+        flexDirection: 'row', alignItems: 'center', marginTop: 20
     },
     noInternetIcon: {
         width: 30, height: 30, marginLeft: 10
@@ -1781,14 +1843,14 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center'
     },
     modalViewCenter: {
-        flex: 1, width: '100%', justifyContent: 'center', padding: 10,alignItems:'center'
+        flex: 1, width: '100%', justifyContent: 'center', padding: 10, alignItems: 'center'
     },
-    
+
     marginTopAuto: {
         marginTop: 'auto'
     },
     checkEmptyResultFlexAlignCenter: {
-        flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5'
+        flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'
     },
     blackBoldLabel: {
         marginBottom: 10, fontSize: 16, fontWeight: 'bold', color: 'black'
@@ -1844,179 +1906,228 @@ export const globalStyles = StyleSheet.create({
     detailsSmalllRoundedImage: {
         width: 15, height: 15, borderRadius: 15 / 2
     },
-    detailsJaneDoeStyle:{
-         fontSize: 5, color: '#222222' 
+    detailsJaneDoeStyle: {
+        fontSize: 5, color: '#222222'
     },
-    detailsJaneDoeMarginLeftStyle:{
-         fontSize: 5, color: '#222222', marginLeft: 5 
-   },
-    detailsJaneDoeDateStyle:{
-         fontSize: 5, color: '#222222', marginTop: 1 
+    detailsJaneDoeMarginLeftStyle: {
+        fontSize: 5, color: '#222222', marginLeft: 5
     },
-    detailsJaneDoeDateStyleRow:{
-         fontSize: 5, color: '#222222', marginTop: 1, marginLeft: 5 
+    detailsJaneDoeDateStyle: {
+        fontSize: 5, color: '#222222', marginTop: 1
     },
-    detailsUserDateView:{
-         flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 1 
+    detailsJaneDoeDateStyleRow: {
+        fontSize: 5, color: '#222222', marginTop: 1, marginLeft: 5
     },
-    detailsViewSmalllayoutDescriptionPortrait:{
-         width: '80%', marginTop: 5 
+    detailsUserDateView: {
+        flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 1
     },
-    loremTextPortrait:{
-         height: 30, alignItems: 'flex-start', justifyContent: 'flex-start', width: 'auto', fontSize: 5, color: 'grey', textAlignVertical: 'top', width: 35 
+    detailsViewSmalllayoutDescriptionPortrait: {
+        width: '80%', marginTop: 5
     },
-    loremTextLandscape:{
-         height: 30, alignItems: 'flex-start', justifyContent: 'flex-start', width: 'auto', fontSize: 5, color: 'grey', textAlignVertical: 'top', width: '100%'   
+    loremTextPortrait: {
+        height: 30, alignItems: 'flex-start', justifyContent: 'flex-start', width: 'auto', fontSize: 5, color: 'grey', textAlignVertical: 'top', width: 35
     },
-    loremTextPortraitFull:{
-         fontSize: 5, color: 'grey' 
+    loremTextLandscape: {
+        height: 30, alignItems: 'flex-start', justifyContent: 'flex-start', width: 'auto', fontSize: 5, color: 'grey', textAlignVertical: 'top', width: '100%'
     },
-    loremTextLandscapeView:{
-         marginTop: 1, width: '95%', marginRight: 'auto' 
+    loremTextPortraitFull: {
+        fontSize: 5, color: 'grey'
     },
-    viewWidth60:{
-         width: 60 
+    loremTextLandscapeView: {
+        marginTop: 1, width: '95%', marginRight: 'auto'
     },
-    viewWidth100:{
-         width: '100%' 
+    viewWidth60: {
+        width: 60
     },
-    detailsYellowFullScreenLabel:{
-         fontSize: 7, color: '#febf2e', marginTop: -12, fontWeight: 'bold' 
+    viewWidth100: {
+        width: '100%'
     },
-    viewWidth100FlexRow:{
-         width: '100%', flexDirection: 'row' 
+    detailsYellowFullScreenLabel: {
+        fontSize: 7, color: '#febf2e', marginTop: -12, fontWeight: 'bold'
     },
-    viewMarginTop5:{
-         marginTop: 5 
+    viewWidth100FlexRow: {
+        width: '100%', flexDirection: 'row'
     },
-    spinnerTextStyle:{
-         fontSize: 12, color: 'white' 
+    viewMarginTop5: {
+        marginTop: 5
     },
-    detailsCurrentDateStyle:{
-         fontSize: 9, color: '#222222' 
+    spinnerTextStyle: {
+        fontSize: 12, color: 'white'
     },
-    detailsSelectedmonthTitle:{
-         fontSize: 16, color: '#5ec6ca', fontStyle:'italic' 
+    detailsCurrentDateStyle: {
+        fontSize: 9, color: '#222222'
     },
-    detailsSelectedJournalNameTitle:{
-         fontSize: 22, fontStyle: 'italic', color: '#9b56a2',textAlign:'center' 
+    detailsSelectedmonthTitle: {
+        fontSize: 16, color: '#5ec6ca', fontStyle: 'italic'
     },
-    detailsHeaderMiddleView:{
-         width: '60%', alignItems: 'center' 
+    detailsSelectedJournalNameTitle: {
+        fontSize: 22, fontStyle: 'italic', color: '#9b56a2', textAlign: 'center'
     },
-    detailsSettingsIcon:{
-         width: 26, height: 26, marginRight: 20 
+    detailsHeaderMiddleView: {
+        width: '60%', alignItems: 'center'
     },
-    detailsHeaderRightView:{
-         width: '20%', alignItems: 'flex-end', height: 40, justifyContent: 'center' 
+    detailsSettingsIcon: {
+        width: 26, height: 26, marginRight: 20
     },
-    detailsLeftArrowIcon:{
-         width: 80, height: 40, justifyContent: 'center' 
+    fontIcons: {
+        width: 20, height: 20
     },
-    detailsHeaderLeftView:{
-         width: '20%', alignItems: 'flex-start' 
+    fontColorIcons: {
+        width: 25, height: 25
+
     },
-    detailsCalendarIcon:{
+    detailsHeaderRightView: {
+        width: '20%', alignItems: 'flex-end', height: 40, justifyContent: 'center'
+    },
+    detailsLeftArrowIcon: {
+        width: 80, height: 40, justifyContent: 'center'
+    },
+    detailsHeaderLeftView: {
+        width: '20%', alignItems: 'flex-start'
+    },
+    detailsCalendarIcon: {
         width: 25, height: 25, alignSelf: 'center'
     },
-    viewFlex1:{
-         flex: 1 
+    viewFlex1: {
+        flex: 1,
     },
-    titlesMarginLeft10:{
-         marginLeft: 10 
+    titlesMarginLeft10: {
+        marginLeft: 10
     },
-    titlesMarginLeft15:{
-         marginLeft: 15 
+    titlesMarginLeft15: {
+        marginLeft: 15
     },
-    mainFlexbackgroundYellow:{ 
-        flex: 1, backgroundColor: '#febf2e' },
-    
-    subHeaderViewbackgroundYellow:{
-         width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'row' 
+    mainFlexbackgroundYellow: {
+        flex: 1, backgroundColor: '#febf2e'
     },
-    headerGlobalLeftRightView:{
-         width: '15%', justifyContent: 'center', alignItems: 'center' 
-    },
-    headerGlobalMiddleView:{
-         width: '70%', justifyContent: 'center', alignItems: 'center' },
 
-    viewHeight15AlignCenter:{ 
-        height: '15%', alignItems: 'center' },
+    subHeaderViewbackgroundYellow: {
+        width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'row'
+    },
+    headerGlobalLeftRightView: {
+        width: '15%', justifyContent: 'center', alignItems: 'center'
+    },
+    headerGlobalMiddleView: {
+        width: '70%', justifyContent: 'center', alignItems: 'center'
+    },
 
-    contributorListItemMainView:{
+    viewHeight15AlignCenter: {
+        height: '15%', alignItems: 'center'
+    },
+
+    contributorListItemMainView: {
         flex: 1, flexDirection: 'row', padding: 20, alignItems: 'center'
-    }, 
-    contributorListImageRounded:{
-        width: 60, height: 60, borderRadius: 60 / 2 
     },
-    contributorListUserName:{
+    contributorListImageRounded: {
+        width: 60, height: 60, borderRadius: 60 / 2
+    },
+    contributorListUserName: {
         marginLeft: 20, color: 'grey', fontSize: 12
     },
-    contributorListIsAdminLabel:{
-        color: '#F25278', marginLeft: 'auto', marginRight: 10, fontSize: 12 
+    contributorListIsAdminLabel: {
+        color: '#F25278', marginLeft: 'auto', marginRight: 10, fontSize: 12
     },
-    contributorListIsnotAdmin:{
+    contributorListIsnotAdmin: {
         color: '#F25278', marginLeft: 'auto', marginRight: 10, fontSize: 12, marginTop: 10
     },
-    settingsEditJournalProfileLabel:{
-         color: 'grey', fontSize: 14, alignSelf: 'center', marginTop: 15 
+    settingsEditJournalProfileLabel: {
+        color: 'grey', fontSize: 14, alignSelf: 'center', marginTop: 15
     },
-    settingsSubmitLabel:{
+    settingsSubmitLabel: {
         color: 'green', fontSize: 18, alignSelf: 'center', marginTop: 10
     },
-    settingJournalInput:{
-        width: '90%', alignSelf: 'center', height: 35, marginLeft: 10, padding: 0, color: 'black' 
+    settingJournalInput: {
+        width: '90%', alignSelf: 'center', height: 35, marginLeft: 10, padding: 0, color: 'black'
     },
-    viewRowFullwidthCenter:{ 
-        flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center' 
+    viewRowFullwidthCenter: {
+        flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center'
     },
-    settingDeleteBtnViewStyle:{
-         left: 0, right: 0, bottom: 0, height: 70, justifyContent: 'center', alignItems: 'center' 
+    settingDeleteBtnViewStyle: {
+        left: 0, right: 0, bottom: 0, height: 70, justifyContent: 'center', alignItems: 'center'
     },
-    settingsModalView:{
-         backgroundColor: '#ffffff', padding: 5, height: '40%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center'
+    settingsModalView: {
+        backgroundColor: '#ffffff', padding: 5, height: '40%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', justifyContent: 'center'
     },
-    flexRow:{
-         flexDirection: 'row' 
+    flexRow: {
+        flexDirection: 'row'
     },
-    shippingSaveLabel:{
-         color: '#F25278', fontSize: 16, marginTop: 10, fontWeight: '600', textAlign: 'center' 
+    shippingSaveLabel: {
+        color: '#F25278', fontSize: 16, marginTop: 10, fontWeight: '600', textAlign: 'center'
     },
-    calendarMainModalView:{ 
-        backgroundColor: '#ffffff', padding: 5, height: '30%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center' 
+    calendarMainModalView: {
+        backgroundColor: '#ffffff', padding: 5, height: '35%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center'
     },
-    calendarMainModalView2:{
-        flex: 1, width: '100%', justifyContent: 'center', padding: 10, marginTop: 30 ,alignItems:'center'
+    calendarMainModalView2: {
+        flex: 1, width: '100%', justifyContent: 'center', padding: 10, marginTop: 30, alignItems: 'center'
     },
-    viewFlexRowCenterWithMargin:{
+    viewFlexRowCenterWithMargin: {
         flexDirection: 'row', justifyContent: 'center', alignItems: 'center', margin: 10
     },
-    imageRounded40:{ 
-        width: 40, height: 40, borderRadius: 40 / 2 
+    imageRounded40: {
+        width: 40, height: 40, borderRadius: 40 / 2
     },
-    purpleBoldLable:{
-         color: '#9b56a2', fontWeight: '600', fontSize: 12 
+    purpleBoldLable: {
+        color: '#9b56a2', fontWeight: '600', fontSize: 12
     },
-    viewWidthHeigth100:{
-         width: '100%', height: '100%' 
+    viewWidthHeigth100: {
+        width: '100%', height: '100%'
     },
-    labelWhiteBold:{
-         color: 'white', fontWeight: 'bold' 
+    labelWhiteBold: {
+        color: 'white', fontWeight: 'bold'
     },
-    previewCoverView:{
-         backgroundColor: '#5ec6ca', padding: 5, justifyContent: 'center', alignItems: 'center', width: '60%', marginTop: 'auto', top: 15, borderRadius: 5 
+    previewCoverView: {
+        backgroundColor: '#5ec6ca', padding: 5, justifyContent: 'center', alignItems: 'center', width: '60%', marginTop: 'auto', top: 15, borderRadius: 5
     },
-    previewSinglePageFooterView:{
-        width: '95%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15 
+    previewSinglePageFooterView: {
+        width: '95%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15
     },
-    previewFooterPageItemListView:{
+    previewFooterPageItemListView: {
         width: 250, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 30, position: 'absolute', bottom: 15
     },
-    flexRowMargintop5:{
-         flexDirection: 'row', marginTop: 5 
+    flexRowMargintop5: {
+        flexDirection: 'row', marginTop: 5
     },
-    journalSortGreyLabel:{
-        fontSize: 9, color: 'grey', marginLeft: 3 
-    }
+    journalSortGreyLabel: {
+        fontSize: 9, color: 'grey', marginLeft: 3
+    },
+    paymentTermsStyle: {
+        textDecorationLine: 'underline', fontSize: 12, color: 'black'
+    },
+    marginTop20: {
+        marginTop: 20,
+        marginLeft: 20,
+        marginRight: 20,
+    },
+    row_div_marginTop: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 10
+    },
+    desc_Input: {
+        display: 'flex',
+        justifyContent: 'center',
+        borderWidth: 0.5,
+        borderColor: '#D5D5D5',
+        borderRadius: 5,
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: 100,
+        padding: 0,
+    },
+    font_view: {
+        marginLeft: 20,
+        padding: 2
+    },
+    font_view_Selected: {
+        borderBottomColor: '#9b56a2',
+        borderBottomWidth: 5,
+        marginLeft: 20,
+        padding: 2
+    },
+
+
 
 })

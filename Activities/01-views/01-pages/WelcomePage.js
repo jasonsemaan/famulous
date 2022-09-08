@@ -8,6 +8,8 @@ import { strings } from "../../../App";
 
 const WelcomePage = ({ navigation }) => {
     const [authenticated, setAuthenticated] = useState(false)
+    let [splashVisible, setSplashVisible] = useState(true);
+
 
     //Labels
     let [lets_get_started, setLetsGetStarted] = useState("Let's get started");
@@ -15,7 +17,7 @@ const WelcomePage = ({ navigation }) => {
     let [have_an_account, setHaveAnAccount] = useState("Have an account?");
     let [login, setLogin] = useState("Login");
     let [welcomeToFamulous, setWelcomeToFamulous] = useState("Welcome to Famulous");
-    
+
     /** get params from async storage */
     const getAsyncStorageData = async () => {
         try {
@@ -43,45 +45,69 @@ const WelcomePage = ({ navigation }) => {
         }
     }
 
+    const Hide_Splash_Screen = () => {
+        setSplashVisible(false)
+        checkUserifLoggedIn()
+    }
+
+    const Splash_Screen = () => {
+        return (
+            <View style={globalStyles.main_Container}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.home_famulous_logo_Drawer} />
+                </View>
+            </View>
+        )
+    }
+
 
     useEffect(() => {
+        setTimeout(() => {
+            Hide_Splash_Screen();
+        }, 3000);
         getAsyncStorageData()
-        checkUserifLoggedIn()
+
         return () => {
         }
     }, [])
 
 
     return (
-        <View style={globalStyles.container}>
-            <View style={globalStyles.Welc_image_div}>
-                <Image source={require('../../assets/welcomePageIcon.png')} style={globalStyles.image_WelcomePage}/>
-            </View>
-            <View style={globalStyles.Welc_Midle_div}>
-                <Text style={globalStyles.main_boldText}>{lets_get_started} {'\n'}</Text>
-                <Text style={globalStyles.main_Welcome_smallText}>{welcomeToFamulous}</Text>
-            </View>
-            <View style={globalStyles.Welc_Log_footer_div}>
+        <View style={globalStyles.safeAreaContainer}>
+            {splashVisible === false ? (
+                    <View style={globalStyles.container}>
+                        <View style={globalStyles.Welc_image_div}>
+                            <Image source={require('../../assets/welcomePageIcon.png')} style={globalStyles.image_WelcomePage} />
+                        </View>
+                        <View style={globalStyles.Welc_Midle_div}>
+                            <Text style={globalStyles.main_boldText}>{lets_get_started} {'\n'}</Text>
+                            <Text style={globalStyles.main_Welcome_smallText}>{welcomeToFamulous}</Text>
+                        </View>
+                        <View style={globalStyles.Welc_Log_footer_div}>
 
-                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateAccountPage')}>
-                    <View style={globalStyles.Welc_Log_button}>
-                        <Text style={globalStyles.Wel_Log_buttonLabel}>{createAccount}</Text>
+                            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateAccountPage')}>
+                                <View style={globalStyles.Welc_Log_button}>
+                                    <Text style={globalStyles.Wel_Log_buttonLabel}>{createAccount}</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <View style={globalStyles.main_rowdiv}>
+                                <Text style={globalStyles.main_Welcome_smallText}>{have_an_account} </Text>
+                                <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('LoginPage')}>
+                                    <Text style={globalStyles.Welc_Log_redlabel}>{login}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
-                </TouchableOpacity>
-                <View style={globalStyles.main_rowdiv}>
-                    <Text style={globalStyles.main_Welcome_smallText}>{have_an_account} </Text>
-                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('LoginPage')}>
-                        <Text style={globalStyles.Welc_Log_redlabel}>{login}</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
-    );
+                   
+                          ): <Splash_Screen/>
+                        }
+                         </View>
+            );
 }
 
 
-const styles = StyleSheet.create({
+            const styles = StyleSheet.create({
 
-})
+            })
 
-export default WelcomePage;
+            export default WelcomePage;

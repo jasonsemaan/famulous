@@ -19,6 +19,7 @@ export default {
     upload: "Upload",
     writeadescription: "Write a description",
     chooseImage: "Choose image",
+    addImage: "Add image",
     pleaseSelectanImage:"Please select an image",
     yourImgUploadedSuccesfully:"Your image uploaded successfully",
     chooseyourimagelayout:"Choose your image layout",
@@ -157,6 +158,7 @@ export default {
     grSemiGlossyPaper: "130gr semi-glossy paper",
     a5Size: "A5 size",
     lastPageContainingAllContr: "Last page containing all contributors",
+    you_or_thePerson: "You or the person you invote to your journal uploads photos",
 
     //SignOut PopUp
     areyousure: "Are you sure?",

@@ -74,12 +74,12 @@ const SubscriptionPage = ({ navigation }) => {
                             <View style={globalStyles.headerGlobalLeftRightView}>
                                 <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Root')}>
                                     <View style={{ padding: 10 }}>
-                                        <Image style={globalStyles.backArrow} source={require('../../../assets/back-icon.png')} />
+                                        <Image style={globalStyles.backArrow2} source={require('../../../assets/back-icon.png')} />
                                     </View>
                                 </TouchableOpacity>
                             </View>
                             <View style={globalStyles.headerGlobalMiddleView}>
-                                <Text style={globalStyles.main_headerDiv_titlestyle}>{subscription}</Text>
+                                <Text style={globalStyles.main_headerDiv_titlestyle2}>{subscription}</Text>
                             </View>
                             <View style={globalStyles.headerGlobalLeftRightView}></View>
                         </View>

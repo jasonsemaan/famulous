@@ -19,6 +19,7 @@ export default {
     upload: "Télécharger",
     writeadescription: "Écrire une description",
     chooseImage: "Choisissez un image",
+    addImage: "Ajouter un Image",
     pleaseSelectanImage: "Veuillez sélectionner une image",
     yourImgUploadedSuccesfully: "Votre image a été téléchargée avec succès",
     chooseyourimagelayout:"Choisissez votre disposition d'image",
@@ -157,6 +158,7 @@ export default {
     grSemiGlossyPaper: "130gr papier semi-brillant",
     a5Size: "format A5",
     lastPageContainingAllContr: "Dernière page contenant tous les contributeurs",
+    you_or_thePerson: "Vous ou la personne que vous invitez à votre journal télécharge une photo",
 
     //SignOut PopUp
     areyousure: "Êtes-vous sûr?",

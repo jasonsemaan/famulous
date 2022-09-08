@@ -210,10 +210,10 @@ const JournalSorting = ({ route, navigation }) => {
         let description = item.imgDescriptionVisible == false ? noDesc : desc
 
         var imageDate = moment(new Date(item.uploadTime * 1000)).format('MM-DD-YYYY');
-        if (index <= 29) {
+       
             return (
                 <View>
-                    {item.fullScreen === false ? (
+                    {/* {item.fullScreen === false ? ( */}
                         <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
                             <SingleImageEnable contributerUid={item.contributerUid}
                                 imgPath={item.imgPath}
@@ -227,9 +227,10 @@ const JournalSorting = ({ route, navigation }) => {
                                 imgDescriptionVisible={item.imgDescriptionVisible}
                                 openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
                                 alertRemove={() => alertRemove(item.imgStoreRef)}
+                                isDesc={item.desc}
                             />
                         </TouchableOpacity>
-                    ) :
+                    {/* ) :
                         <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
                             <FullScreenImageEnable contributerUid={item.contributerUid}
                                 imgPath={item.imgPath}
@@ -243,50 +244,13 @@ const JournalSorting = ({ route, navigation }) => {
                                 imgDescriptionVisible={item.imgDescriptionVisible}
                                 openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
                                 alertRemove={() => alertRemove(item.imgStoreRef)}
+                                isDesc={item.desc}
                             />
                         </TouchableOpacity>
-                    }
+                    } */}
                 </View>
             )
-        } else if (index > 29) {
-            return (
-                <View>
-                    {item.fullScreen === false ? (
-                        <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
-                            <SingleImageDisable contributerUid={item.contributerUid}
-                                imgPath={item.imgPath}
-                                by={by}
-                                contributorName={item.contributorName}
-                                description={description.substring(0, 50)} i
-                                imageDate={imageDate}
-                                fullScreenLabel={fullScreenLabel}
-                                imgOrientation={item.imgOrientation}
-                                fullScreen={item.fullScreen}
-                                imgDescriptionVisible={item.imgDescriptionVisible}
-                                openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
-                                alertRemove={() => alertRemove(item.imgStoreRef)}
-                            />
-                        </TouchableOpacity>
-                    ) :
-                        <TouchableOpacity activeOpacity={0.8} onLongPress={drag}>
-                            <FullScreenImageDisable contributerUid={item.contributerUid}
-                                imgPath={item.imgPath}
-                                by={by}
-                                contributorName={item.contributorName}
-                                description={description.substring(0, 50)} i
-                                imageDate={imageDate}
-                                fullScreenLabel={fullScreenLabel}
-                                imgOrientation={item.imgOrientation}
-                                fullScreen={item.fullScreen}
-                                imgDescriptionVisible={item.imgDescriptionVisible}
-                                openUpdateDescModal={() => openUpdateDescModal(item.imgStoreRef, item.imgDescription)}
-                                alertRemove={() => alertRemove(item.imgStoreRef)}
-                            />
-                        </TouchableOpacity>
-                    }
-                </View>
-            )
-        }
+        
     }
 
 
@@ -347,7 +311,7 @@ const JournalSorting = ({ route, navigation }) => {
             <Modal transparent={true} visible={modalStatus}>
                 <TouchableOpacity activeOpacity={0} style={globalStyles.viewFlex1} onPress={() => setModalStatus(false)}>
                     <View style={globalStyles.modalDivstyle}>
-                        <View style={{ backgroundColor: '#ffffff', padding: 5, height: '25%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
+                        <View style={{ backgroundColor: '#ffffff', padding: 5, height: '35%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
                             <View style={globalStyles.modalViewCenter}>
                                 <View style={globalStyles.alignItemsCenter}>
                                     <View style={{ marginBottom: 10, flexDirection: 'row' }}>

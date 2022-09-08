@@ -87,12 +87,12 @@ const PaymentPage = ({ navigation }) => {
                             <View style={globalStyles.headerGlobalLeftRightView}>
                                 <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('DeliveryPage')}>
                                     <View style={{ padding: 10 }}>
-                                        <Image style={globalStyles.header_globalbackicon} source={require('../../../assets/back-icon.png')} />
+                                        <Image style={globalStyles.backArrow2} source={require('../../../assets/back-icon.png')} />
                                     </View>
                                 </TouchableOpacity>
                             </View>
                             <View style={globalStyles.headerGlobalMiddleView}>
-                                <Text style={globalStyles.main_headerDiv_titlestyle}>{payment}</Text>
+                                <Text style={globalStyles.main_headerDiv_titlestyle2}>{payment}</Text>
                             </View>
                             <View style={globalStyles.headerGlobalLeftRightView}></View>
                         </View>
@@ -173,13 +173,13 @@ const PaymentPage = ({ navigation }) => {
                                 <View style={{marginRight:10}}> 
                                     <View style={globalStyles.flexRow}>
                                         <Text style={{ color: 'grey', fontSize: 12 }}>{i_agree_to_the}</Text>
-                                        <Text style={{ textDecorationLine: 'underline', fontSize: 12 }}> {terms_and_Conditions}</Text>
+                                        <Text style={globalStyles.paymentTermsStyle}> {terms_and_Conditions}</Text>
                                         <Text style={{ color: 'grey', fontSize: 12 }}> {and}</Text>
-                                        <Text style={{ textDecorationLine: 'underline', fontSize: 12 }}> {privacy}</Text>
+                                        <Text style={globalStyles.paymentTermsStyle}> {privacy}</Text>
                                     </View>
 
                                     <View>
-                                        <Text style={{ textDecorationLine: 'underline', fontSize: 12 }}> {policy}</Text>
+                                        <Text style={globalStyles.paymentTermsStyle}> {policy}</Text>
                                     </View>
                                 </View>
                             </View>

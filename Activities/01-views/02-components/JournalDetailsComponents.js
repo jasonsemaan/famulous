@@ -138,6 +138,40 @@ export class LandscapeNoDescription extends React.Component{
     }
 }
 
+export class DescriptionViewOnly extends React.Component{
+    render(){
+        return  <View style={this.props.isDescStatus ? globalStyles.imageLayout_landscapeWithDesc_Selected : globalStyles.imageLayout_landscapeWithDesc}>
+        <View style={globalStyles.loremTextLandscapeView}>
+            <Text style={globalStyles.loremTextLandscape}>Lorem ipsum dolor sit amet, consecter adipiscing elit. Fusce laoreet consequat gravida.</Text>
+        </View>
+        <View style={globalStyles.detailsUserDateView}>
+                <View>
+                    <Image source={require('../../assets/portrait_image2.jpeg')} style={globalStyles.detailsSmalllRoundedImage} />
+                </View>
+                <Text style={globalStyles.detailsJaneDoeMarginLeftStyle}>Jane doe</Text>
+                <Text style={globalStyles.detailsJaneDoeDateStyleRow}>1 - 11 - 2021</Text>
+            </View>
+    </View>
+    }
+}
+
+export class DescriptionViewFullOnly extends React.Component{
+    render(){
+        return  <View style={this.props.isDescStatus ? globalStyles.imageLayout_landscapeWithDesc_Selected : globalStyles.imageLayout_landscapeWithDesc}>
+        <View style={globalStyles.loremTextLandscapeView}>
+            <Text style={globalStyles.loremTextLandscape}>Lorem ipsum dolor sit amet, consecter adipiscing elit. Fusce laoreet consequat gravida.</Text>
+        </View>
+        <View style={globalStyles.detailsUserDateView}>
+                <View>
+                    <Image source={require('../../assets/portrait_image2.jpeg')} style={globalStyles.detailsSmalllRoundedImage} />
+                </View>
+                <Text style={globalStyles.detailsJaneDoeMarginLeftStyle}>Jane doe</Text>
+                <Text style={globalStyles.detailsJaneDoeDateStyleRow}>1 - 11 - 2021</Text>
+            </View>
+    </View>
+    }
+}
+
 export class ModalDetailsComponent extends React.Component{
     render(){
         return  <Modal transparent={true} visible={this.props.connectionModalStatus}>

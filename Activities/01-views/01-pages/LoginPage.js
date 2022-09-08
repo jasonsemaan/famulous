@@ -117,7 +117,24 @@ const LoginPage = ({ route, navigation }) => {
 
 
     return (
-        <View style={globalStyles.container}>
+        <SafeAreaView style={globalStyles.container}>
+                  <View style={globalStyles.JournalDetails_header}>
+                            <View style={globalStyles.viewWidth100FlexRow}>
+                                <View style={globalStyles.detailsHeaderLeftView}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('WelcomePage')}>
+                                        <View style={globalStyles.detailsLeftArrowIcon}>
+                                            <Image style={globalStyles.backArrow} source={require('../../assets/left-arrow.png')} />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={globalStyles.detailsHeaderMiddleView}>
+                                    <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo_MainPage} />
+                                </View>
+                                <View style={globalStyles.detailsHeaderRightView}>
+
+                                </View>
+                            </View>
+                        </View>
             {isConnectedToInternet == true ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                     <View style={globalStyles.Login_image_div}>
@@ -177,7 +194,7 @@ const LoginPage = ({ route, navigation }) => {
 
             }
             <Toast ref={(ref) => Toast.setRef(ref)} />
-        </View>
+        </SafeAreaView>
 
 
     );

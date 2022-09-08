@@ -57,8 +57,8 @@ const Root = () => {
 const MyStack = () => {
   return (
     <NavigationContainer>
- <JournalProvider>
-           <Stack.Navigator>
+      <JournalProvider>
+        <Stack.Navigator>
           <Stack.Screen name="WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
           <Stack.Screen name="CreateAccountPage" component={CreateAccountPage} options={{ headerShown: false }} />
           <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: false }} />

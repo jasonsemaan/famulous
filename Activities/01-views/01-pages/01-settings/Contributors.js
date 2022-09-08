@@ -295,7 +295,7 @@ const Contributors = ({ route, navigation }) => {
 
             <View style={{ flex: 3 }}>
                 <SafeAreaView style={globalStyles.safeAreaViewFlexCenterbackgroundWhite}>
-                    <FlatList data={contributorsList} renderItem={_renderItem} />
+                    <FlatList data={contributorsList} renderItem={_renderItem}/>
                 </SafeAreaView>
             </View>
 

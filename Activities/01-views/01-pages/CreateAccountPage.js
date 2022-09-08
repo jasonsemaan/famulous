@@ -30,6 +30,8 @@ const CreateAccountPage = ({ route, navigation }) => {
     let [phoneValue, setPhoneValue] = useState("");
     let [formattedValue, setFormattedValue] = useState("");
     let [securityText, setSecurityText] = useState(true);
+    let [securityTextConfirm, setSecurityTextConfirm] = useState(true);
+
     let [submitBtnToggle, setSubmitBtnToggle] = useState(true);
     let checkValid = isValidNumber(formattedValue);
     let [imageSelected, setImageSelected] = useState("")
@@ -62,10 +64,15 @@ const CreateAccountPage = ({ route, navigation }) => {
     const showPassword = require('../../assets/view.png')
     const hidePassword = require('../../assets/hidden.png')
     let showHidePasswordIcon = securityText == false ? showPassword : hidePassword
+    let showHideConfrimPasswordIcon = securityTextConfirm == false ? showPassword : hidePassword
+
 
     /** function to change show/hide password icon in the textInput */
     const toggleshowPasswordIcon = () => {
         setSecurityText(!securityText)
+    }
+    const toggleshowConfirmPasswordIcon = () => {
+        setSecurityTextConfirm(!securityTextConfirm)
     }
 
     /** function to check if email is formatted */
@@ -294,11 +301,27 @@ const CreateAccountPage = ({ route, navigation }) => {
 
 
     return (
-        <View style={globalStyles.container}>
+        <SafeAreaView style={globalStyles.container}>
             {isConnectedToInternet == true ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                     <KeyboardAwareScrollView style={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
+                    <View style={globalStyles.JournalDetails_header}>
+                            <View style={globalStyles.viewWidth100FlexRow}>
+                                <View style={globalStyles.detailsHeaderLeftView}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('WelcomePage')}>
+                                        <View style={globalStyles.detailsLeftArrowIcon}>
+                                            <Image style={globalStyles.backArrow} source={require('../../assets/left-arrow.png')} />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={globalStyles.detailsHeaderMiddleView}>
+                                    <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo_MainPage} />
+                                </View>
+                                <View style={globalStyles.detailsHeaderRightView}>
 
+                                </View>
+                            </View>
+                        </View>
                         <View style={globalStyles.CreateAcc_image_div}>
                             <View style={globalStyles.createAccount_profileImage}>
                                 <TouchableOpacity activeOpacity={0.5} style={globalStyles.viewFlex1} onPress={() => openGallery()}>
@@ -410,8 +433,23 @@ const CreateAccountPage = ({ route, navigation }) => {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-
+                                
                                 <View>
+                                    <View style={globalStyles.flexRow}>
+                                        <Text style={globalStyles.CreateAcc_titleInput}>{confirmPasswordLabel}</Text>
+                                    </View>
+                                    <View style={globalStyles.login_InputwithImage}>
+                                        <TextInput style={globalStyles.textInputWithIcon} secureTextEntry={securityTextConfirm} underlineColorAndroid="transparent" onChangeText={(text) => setConfirmPassword(text)} />
+                                        <TouchableOpacity onPress={() => toggleshowConfirmPasswordIcon()} style={{ justifyContent: 'center', flex: 1 }}>
+                                            <Image source={showHideConfrimPasswordIcon} style={globalStyles.login_password_showHidePass} />
+                                        </TouchableOpacity>
+                                        {confirmpasswordWarning ?
+                                            (
+                                                <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon} />) : null}
+                                    </View>
+                                </View>
+
+                                {/* <View>
                                     <Text style={globalStyles.CreateAcc_titleInput}>{confirmPasswordLabel}</Text>
                                     <View style={globalStyles.login_InputwithImage}>
                                         <TextInput style={globalStyles.textInputWithIcon} underlineColorAndroid="transparent" onChangeText={(text) => setConfirmPassword(text)} />
@@ -419,7 +457,7 @@ const CreateAccountPage = ({ route, navigation }) => {
                                             (
                                                 <Image source={require('../../assets/warning.png')} style={globalStyles.login_password_warningicon} />) : null}
                                     </View>
-                                </View>
+                                </View> */}
 
 
                                 <View style={globalStyles.viewSubmitButton}>
@@ -447,7 +485,7 @@ const CreateAccountPage = ({ route, navigation }) => {
                 <NoInternetConnection noInternetConnection={noInternetConnection} checkyourconnection={checkyourconnectionthenrefreshthepage} checkConnection={checkConnection} refresh={refresh} />
 
             }
-        </View>
+        </SafeAreaView>
 
     );
 }

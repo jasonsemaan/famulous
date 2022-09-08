@@ -112,7 +112,7 @@ const DrawerNav = ({ navigation }) => {
 
     let SignOutFunction = () => {
         firebase.auth().signOut();
-        navigation.navigate('WelcomePage');
+        navigation.replace('WelcomePage');
         
     }
 
@@ -152,11 +152,10 @@ const DrawerNav = ({ navigation }) => {
                     <View style={{ margin: 30, width: '100%', flexDirection: 'row' }}>
                         <View style={{ alignItems: 'center', width: '15%' }}>
                         </View>
-                        <View style={{ alignItems: 'center', width: '70%' }}>
+                        <View style={{ alignItems: 'center', width: '70%', marginTop:60 }}>
                             <Image source={require('../assets/famulous_logo.png')} style={globalStyles.home_famulous_logo_Drawer}/>
                         </View>
                         <View style={{ width: '15%', justifyContent: 'center', marginLeft: 10 }}>
-
                         </View>
                     </View>
                     {userUid != "" ? (

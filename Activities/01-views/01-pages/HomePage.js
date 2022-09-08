@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Text, SafeAreaView, StyleSheet, Image, FlatList, TouchableOpacity, Modal, BackHandler, TextInput } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Image, FlatList, TouchableOpacity, Modal, BackHandler, TextInput, Alert } from "react-native";
 import auth, { firebase } from '@react-native-firebase/auth';
 import { globalStyles } from "../../../Activities/03-constants/global";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,6 +39,7 @@ const HomePage = ({ navigation }) => {
     let [daysLeftFromDB, setDaysLeftFromDB] = useState(0);
     let [isConnectedToInternet, setIsConnectedToInternet] = useState(true);
     let [connectionModalStatus, setConnectionModalStatus] = useState(false);
+
 
     const isFocused = useIsFocused();
 
@@ -83,6 +84,7 @@ const HomePage = ({ navigation }) => {
                 getAllJournalsByUser(idToken)
                 getUserProfile(idToken)
                 console.log(idToken)
+
             });
         });
     }
@@ -303,7 +305,7 @@ const HomePage = ({ navigation }) => {
         myContext.setCoverImage(coverImage);
         myContext.setPreviewStatus(1);
         myContext.setEditionDaysLeft(daysLeft);
-        myContext.setEditionRef(editionRef+"")
+        myContext.setEditionRef(editionRef + "")
         myContext.setDateMonth(releaseDateMonth + " Journal")
         myContext.setEditionReleaseDate(releaseDateFormated)
     }
@@ -312,7 +314,7 @@ const HomePage = ({ navigation }) => {
         navigation.navigate('JournalPreview')
         myContext.setCoverImage(coverImage);
         myContext.setPreviewStatus(0);
-        myContext.setEditionRef(editionRef+"")
+        myContext.setEditionRef(editionRef + "")
         myContext.setDateMonth(releaseDateMonth + " Journal")
         myContext.setEditionReleaseDate(releaseDateFormated)
     }
@@ -457,7 +459,7 @@ const HomePage = ({ navigation }) => {
                     </View>
 
                     {myJournalsList.length != 0 ? (
-                        <ContributorsDaysLeftComponent contributorsNb={contributorsNb} contributorss={contributorss}/>
+                        <ContributorsDaysLeftComponent contributorsNb={contributorsNb} contributorss={contributorss} />
                     ) :
                         <View style={globalStyles.row_div_homePage_contributorsDaysLeft}>
                         </View>
@@ -482,11 +484,11 @@ const HomePage = ({ navigation }) => {
             <Modal transparent={true} visible={modalStatus}>
                 <TouchableOpacity activeOpacity={0} style={globalStyles.viewFlex1} onPress={() => setModalStatus(false)}>
                     <View style={globalStyles.modalDivstyle}>
-                        <View style={{ backgroundColor: '#ffffff', padding: 5, height: '25%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
+                        <View style={{ backgroundColor: '#ffffff', padding: 5, height: '35%', borderTopLeftRadius: 30, borderTopRightRadius: 30, alignItems: 'center', }}>
                             <View style={globalStyles.modalViewCenter}>
                                 <View style={globalStyles.alignItemsCenter}>
-                                <View style={{ marginBottom: 10, flexDirection: 'row'}}>
-                                        <Image source={require('../../assets/paper.png')} style={{ width: 15, height: 15,marginRight:10 }} />
+                                    <View style={{ marginBottom: 10, flexDirection: 'row' }}>
+                                        <Image source={require('../../assets/paper.png')} style={{ width: 15, height: 15, marginRight: 10 }} />
                                         <Text style={{ color: 'black', fontSize: 12 }}>
                                             {addyourownjournal}
                                         </Text>
@@ -510,8 +512,9 @@ const HomePage = ({ navigation }) => {
             </Modal>
 
             <ModalConnection visible={connectionModalStatus} noInternetConnection={noInternetConnection} checkConnection={() => checkConnection(1)} refresh={refresh} />
-
+           
         </View>
+       
     );
 
 

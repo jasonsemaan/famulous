@@ -67,6 +67,11 @@ const reducer = (state, action) => {
                 ...state,
                 Token: action.payload
             };
+        case 'PREVIEW_LIST_SIZE':
+            return {
+                ...state,
+                PreviewListSize: action.payload
+            };
 
         default:
             return state;
@@ -90,6 +95,7 @@ export const JournalProvider = ({ children }) => {
         editionDaysLeft: null,
         DateMonth: null,
         Token: null,
+        PreviewListSize: null
     };
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -110,7 +116,7 @@ export const JournalProvider = ({ children }) => {
             setEditionDaysLeft: (editionDaysLeft) => dispatch({ type: 'EDITION_DAYS_LEFT', payload: editionDaysLeft }),
             setDateMonth: (DateMonth) => dispatch({ type: 'DATE_MONTH', payload: DateMonth }),
             setToken: (Token) => dispatch({ type: 'TOKEN_ID', payload: Token }),
-
+            setPreviewListSize: (PreviewListSize) => dispatch({ type: 'PREVIEW_LIST_SIZE', payload: PreviewListSize }),
         }}>
             {children}
         </JournalContext.Provider>

@@ -10,7 +10,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { strings } from "../../../App";
 import {
     PortraitDescComponentTop, LandscapeDescComponentTop, LandscapeNoDescComponentTop, PortraitDescComponentBottom, LandscapeDescComponentBottom, LandscapeNoDescComponentBottom,
-    PortraitFullNoDescComponent, PortraitFullDescComponent, ImageBackgroundDefault, ImageBackgroundCover, SinglePageFooterComponent, PreviewFooterListItem
+    PortraitFullNoDescComponent, PortraitFullDescComponent, ImageBackgroundDefault, ImageBackgroundCover, SinglePageFooterComponent, PreviewFooterListItem, DescriptionViewOnlyComponent, DescriptionFullViewOnlyComponent
 } from "../02-components/JournalPreviewComponent";
 import { ModalConnection } from "../02-components/ConnectionComponent";
 import { EditionImagesCall } from "../03-providers/ImagesProvider";
@@ -61,6 +61,7 @@ const JournalPreview = ({ route, navigation }) => {
 
     /** function to store response of the backend api into a current list */
     let storeImagesList = (response) => {
+        console.log(response)
         setEditionImagesList(response)
         setLoading(false)
     }
@@ -150,40 +151,13 @@ const JournalPreview = ({ route, navigation }) => {
 
         return (
             <View style={globalStyles.JournalPreview_pageStyle}>
-                {frameId.substring(0, 1) === "S" ? (
-                    <View>
-                        {item.famImgStoreEntity1.IMG_ORIENTATION === "PORTRAIT" ? (
-                            <PortraitDescComponentTop contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION} />
-                        ) : item.famImgStoreEntity1.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity1.IMG_DESCRIPTION_VISIBLE === 1 ? (
-                            <LandscapeDescComponentTop contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION} />
-                        ) : item.famImgStoreEntity1.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity1.IMG_DESCRIPTION_VISIBLE === 0 ? (
-                            <LandscapeNoDescComponentTop contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} />
-                        ) : null
-                        }
-                        {item.famImgStoreEntity2 != null ? (
-                            <View>
-                                {item.famImgStoreEntity2.IMG_ORIENTATION === "PORTRAIT" ? (
-                                    <PortraitDescComponentBottom contributorUID={item.famImgStoreEntity2.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity2.IMG_PATH} profilePhotoPath={item.famImgStoreEntity2.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity2.USER_NAME} formattedDate={formattedDate2} imgDescription={item.famImgStoreEntity2.IMG_DESCRIPTION} />
-                                ) : item.famImgStoreEntity2.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity2.IMG_DESCRIPTION_VISIBLE === 1 ? (
-                                    <LandscapeDescComponentBottom contributorUID={item.famImgStoreEntity2.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity2.IMG_PATH} profilePhotoPath={item.famImgStoreEntity2.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity2.USER_NAME} formattedDate={formattedDate2} imgDescription={item.famImgStoreEntity2.IMG_DESCRIPTION} />
-                                ) : item.famImgStoreEntity2.IMG_ORIENTATION === "LANDSCAPE" && item.famImgStoreEntity2.IMG_DESCRIPTION_VISIBLE === 0 ? (
-                                    <LandscapeNoDescComponentBottom contributorUID={item.famImgStoreEntity2.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity2.IMG_PATH} profilePhotoPath={item.famImgStoreEntity2.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity2.USER_NAME} formattedDate={formattedDate2} />
-                                ) : null
-                                }
-                            </View>
-                        ) : null
-                        }
-                    </View>
-
-                ) : frameId.substring(0, 1) === "F" && item.famImgStoreEntity1.IMG_DESCRIPTION_VISIBLE === 0 ? (
-                    <PortraitFullNoDescComponent contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} />
-                ) :
-                    <PortraitFullDescComponent contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION} />
-                }
-                <SinglePageFooterComponent pageNb={index + 1} journalName={contextJournalName}/>
+                <PortraitFullDescComponent contributorUID={item.famImgStoreEntity1.CONTRIBUTER_UID} ImgPath={item.famImgStoreEntity1.IMG_PATH} profilePhotoPath={item.famImgStoreEntity1.PROFILE_PHOTO_PATH} UserName={item.famImgStoreEntity1.USER_NAME} formattedDate={formattedDate1} imgDescription={item.famImgStoreEntity1.IMG_DESCRIPTION} fontWeight={item.famImgStoreEntity1.FONT_WEIGHT} fontStyle={item.famImgStoreEntity1.FONT_STYLE} textDecoration={item.famImgStoreEntity1.TEXT_DECORATION} textDescColor={item.famImgStoreEntity1.TEXT_DESC} />
+                <SinglePageFooterComponent pageNb={index + 1} journalName={contextJournalName} />
             </View>
         )
     };
+
+
 
     return (
         <View style={globalStyles.JournalPreview_main_Container}>
@@ -193,15 +167,34 @@ const JournalPreview = ({ route, navigation }) => {
                 textStyle={globalStyles.spinnerTextStyle}
             />
 
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F5F5', alignItems: 'center', justifyContent: 'center' }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
                 {editionImagesList.length != 0 ? (
-                    <FlatList
-                        data={editionImagesList}
-                        renderItem={_renderItem}
-                        ListHeaderComponent={<JournalMainPage />}
-                        ListFooterComponent={<JournalFooterPage />}
-                        showsVerticalScrollIndicator={false}
-                    />
+                    <View>
+                        <View style={globalStyles.JournalDetails_header}>
+                            <View style={globalStyles.viewWidth100FlexRow}>
+                                <View style={globalStyles.detailsHeaderLeftView}>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Root')}>
+                                        <View style={globalStyles.detailsLeftArrowIcon}>
+                                            <Image style={globalStyles.backArrow} source={require('../../assets/left-arrow.png')} />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={globalStyles.detailsHeaderMiddleView}>
+                                    <Image source={require('../../assets/famulous_logo.png')} style={globalStyles.JournalPreview_famulous_logo_MainPage} />
+                                </View>
+                                <View style={globalStyles.detailsHeaderRightView}>
+
+                                </View>
+                            </View>
+                        </View>
+                        <FlatList
+                            data={editionImagesList}
+                            renderItem={_renderItem}
+                            ListHeaderComponent={<JournalMainPage />}
+                            ListFooterComponent={<JournalFooterPage />}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    </View>
                 ) :
                     <View style={globalStyles.checkEmptyResultFlexAlignCenter}>
                         <Image source={require('../../assets/search_emptyList.png')} style={globalStyles.noInternetIconwidth60} />
@@ -257,9 +250,9 @@ const JournalMainPage = () => {
             </View>
             <View style={{ width: '100%', borderColor: 'lightgrey', borderWidth: 3, marginBottom: 50 }}>
                 {contextCoverImage == "null" ? (
-                    <ImageBackgroundDefault selectedMonthYear={contextEditionReleaseDate}/>
+                    <ImageBackgroundDefault selectedMonthYear={contextEditionReleaseDate} />
                 ) :
-                    <ImageBackgroundCover selectedMonthYear={contextEditionReleaseDate} admin={contextAdmin} coverImage={contextCoverImage}/>
+                    <ImageBackgroundCover selectedMonthYear={contextEditionReleaseDate} admin={contextAdmin} coverImage={contextCoverImage} />
                 }
             </View>
             <View style={{ width: 250, justifyContent: 'center', alignItems: 'center', height: 50 }}>
@@ -278,7 +271,7 @@ const JournalFooterPage = () => {
     let [contextEditionRef, setContextEditionRef] = useState(myContext.EditionRef)
     let [contextJournalName, setContextJournalName] = useState(myContext.JournalName)
     let [contextJournalRef, setContextJournalRef] = useState(myContext.JournalRef)
-    
+
     let [contributorsList, setContributorsList] = useState([])
     let [holidaysEventsList, setHolidaysEventsList] = useState([])
 
@@ -347,7 +340,7 @@ const JournalFooterPage = () => {
                                 <View style={{ marginTop: 10, alignItems: 'center' }}>
                                     <View style={globalStyles.flexRow}>
                                         <Text style={{ fontSize: 11, color: 'black', width: '30%' }}>{item.userName}</Text>
-                                        <Text style={{ fontSize: 11, color: '#5ec6ca', width: '30%',textAlign:'center' }}>{item.eventDate}</Text>
+                                        <Text style={{ fontSize: 11, color: '#5ec6ca', width: '30%', textAlign: 'center' }}>{item.eventDate}</Text>
                                         <Text style={{ fontSize: 11, color: '#F25278', width: '30%' }}>{item.eventDescription}</Text>
                                     </View>
                                 </View>

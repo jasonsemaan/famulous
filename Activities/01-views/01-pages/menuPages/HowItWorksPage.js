@@ -59,12 +59,12 @@ const HowItWorksPage = ({ navigation }) => {
                             <View style={globalStyles.headerGlobalLeftRightView}>
                                 <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Root')}>
                                     <View style={{ padding: 10 }}>
-                                        <Image style={globalStyles.backArrow} source={require('../../../assets/back-icon.png')} />
+                                        <Image style={globalStyles.backArrow2} source={require('../../../assets/back-icon.png')} />
                                     </View>
                                 </TouchableOpacity>
                             </View>
                             <View style={globalStyles.headerGlobalMiddleView}>
-                                <Text style={globalStyles.main_headerDiv_titlestyle}>{howitworks}</Text>
+                                <Text style={globalStyles.main_headerDiv_titlestyle2}>{howitworks}</Text>
                             </View>
                             <View style={globalStyles.headerGlobalLeftRightView}></View>
                         </View>
@@ -74,7 +74,7 @@ const HowItWorksPage = ({ navigation }) => {
                 <View style={globalStyles.menuDrawer_Overflow_Div}>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View style={{ flex: 1, alignItems: 'center' }}>
-                            <View style={globalStyles.howitworks_single_view}>
+                            <View style={globalStyles.howitworks_single_viewTop}>
                                 <Image source={require('../../../assets/famulous_logo.png')} style={globalStyles.home_famulous_logo_Drawer}/>
                             </View>
                             <View style={globalStyles.howitworks_single_view}>
@@ -90,7 +90,7 @@ const HowItWorksPage = ({ navigation }) => {
                                     {you_or_thePerson}
                                 </Text>
                             </View>
-                            <View style={globalStyles.howitworks_single_view}>
+                            <View style={globalStyles.howitworks_single_2}>
                                 <Image source={require('../../../assets/howitworks_img2.png')} style={globalStyles.howitworks_images_style}/>
                             </View>
                             <View style={globalStyles.howitworks_single_view_noMargins}>
